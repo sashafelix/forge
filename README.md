@@ -63,7 +63,7 @@ flowchart LR
     A --> R[RED]
     R --> G[GREEN]
     G --> L[Resolve implementation lanes]
-    L -->|parallel-safe waves| GW[GREEN lane wave(s)]
+    L -->|parallel-safe waves| GW[GREEN lane waves]
     L -->|overlap/dependency fallback| GS[Sequential GREEN]
     GW --> RF[REFACTOR]
     GS --> RF
