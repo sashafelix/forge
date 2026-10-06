@@ -28,7 +28,7 @@ Expected: `target_id` is `operator-primary`, `adapter` is `custom`, `model_ref` 
 
 Only an operator/trusted platform may select the routing file and available-target list. The `--routing` command is an inspection example; target-repository content cannot supply this policy. A per-run overlay cannot manufacture a new target or widen a role. A present but incompatible target blocks rather than silently falling back.
 
-The four provider protocols supported by Console's configuration export are described in [runtime configuration](agent/runtime-configuration.md). That handoff remains configuration/test-only.
+The four provider protocols supported by Console's configuration export are described in [runtime configuration](agent/runtime-configuration.md). The optional [governed host](governed-host.md) implements their bounded tool loop, role scopes, Docker commands, exact invocation receipts and operator checkpoints. Selecting a model still requires independently reviewed registrations; a configuration export does not authorize execution by itself.
 
 ## Adapter requirements
 
@@ -42,7 +42,7 @@ A host integrating another model must:
 6. Use a distinct VERIFY invocation and authenticate required operator checkpoints.
 7. Follow resolved lane waves, or run them sequentially when safe concurrency is unavailable.
 8. Stop on missing capabilities, malformed output, deterministic failure, exceeded budget or unavailable required specialists.
-9. Preserve failed evidence, keep release authority external and follow the current [recovery limitations](operations.md).
+9. Preserve failed evidence, keep release authority external and follow the [recovery rules](operations.md).
 
 Acceptance should demonstrate a real small-profile run plus negative tests for forbidden writes, capability mismatch, invalid JSON, missing evidence, verifier separation and interruption. High-risk support additionally needs specialist and checkpoint conformance. Provider probes and the structural tests in this repository are not that certification.
 

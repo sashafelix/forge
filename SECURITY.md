@@ -1,6 +1,6 @@
 # Security and trust model
 
-Forge is designed to reduce the authority granted to AI coding agents and to make important execution claims independently inspectable. It is not an operating-system sandbox and should not be treated as one.
+Forge reduces the authority granted to coding agents and makes execution claims inspectable. The portable protocol relies on its adapter for isolation. The optional governed host supplies constrained Docker commands and a role-scoped tool broker; its trusted host process and Docker/image/kernel remain outside that command boundary.
 
 See the [enforcement map](docs/enforcement.md) for what the validators actually inspect, what the host must enforce and what is declarative guidance.
 
@@ -21,6 +21,7 @@ Authority comes from the selected workflow profile, role contract, immutable sta
 ## Core controls
 
 - **Git worktree isolation** — each run is tied to an exact base revision and operates in a dedicated worktree.
+- **Governed-host snapshots** — the opt-in host copies clean tracked HEAD without Git history, captures real command receipts and verifies the patch in a fresh workspace. Private state/key stay outside command mounts. See [host limits and recovery](docs/governed-host.md).
 - **Role-scoped capabilities** — stage roles receive only the capabilities required by their contract; delegated authority can only narrow.
 - **Immutable context** — stage context manifests bound the paths, evidence and authority visible to each invocation.
 - **Independent verification** — the implementation role cannot issue the final VERIFY verdict.

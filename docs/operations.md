@@ -19,13 +19,13 @@ version. Preserve operator input bytes and the exact baseline revision.
 | Stage emits malformed JSON or fails an exit condition | Preserve the output/error, record the failure and halt. Apply only the stage contract's explicit retry policy; no hidden loops. |
 | Completed-run validation fails | Read each reported artifact/criterion/stage issue. Inspect original logs and source revision. Do not change historical records just to obtain PASS. |
 | High-risk specialist/checkpoint is unavailable | Stop before the controlled transition. A role label or model-written approval is not an authenticated specialist or operator decision. |
-| Console export validates but nothing executes | The export is configuration/test-only. The execution host still needs a governed adapter and independent registration. |
+| Console export validates but nothing executes | An export alone grants no execution. Register the governed host and supply reviewed policy, inventory and risk facts in its separate cockpit, or use your existing adapter. |
 | Export rejects a path/file/secret pattern | Inspect the reported content locally. Preserve originals and create a separately reviewed sanitised sharing copy if appropriate; do not disable integrity or secret checks. |
 
-Contracts and prompts describe failure handling. The Python helpers do not
-provide a background supervisor, automatic retry runner or authenticated
-approval service. The [enforcement map](enforcement.md) identifies those host
-responsibilities.
+File validators do not provide a background supervisor or retry runner. The
+opt-in [governed host](governed-host.md) owns transactional state, approvals,
+stage snapshots and explicit recovery. The [enforcement map](enforcement.md)
+separates its controls from other adapters' obligations.
 
 ## Stop and preserve evidence
 
@@ -41,14 +41,24 @@ source changed outside its scope and whether operator checkpoints remain valid.
 Inspect `git status --short`, the diff against the pinned baseline and referenced
 logs. Keep credentials out of errors and shared evidence.
 
-## Current recovery limit
+## Governed-host recovery
 
-Profile contracts allow bounded convergence attempts: one for `small`, at most
-two for `standard` and `high-risk`. However, `validate-run-bundle.py` currently
-requires exactly one completed sequence of the nine stages. It does not accept
-a ledger with repeated completed stages as a multi-attempt run. There is no
-`forge resume` command or utility that reconstructs the state and safely
-re-executes the earliest invalid stage.
+Profile contracts allow one total convergence attempt for `small`, at most
+two for `standard` and `high-risk`. The validators accept contiguous explicit
+`attempt.started` suffix remediation after failure, preserving the completed
+prefix and requiring the remaining mandatory stages again. Terminal completion
+cannot be reopened as another attempt.
+
+Use `python3 scripts/forge-host.py resume RUN_DIR` for an interrupted stage or
+abandoned worker. It restores the stage checkpoint and requests fresh approval.
+Use `retry RUN_DIR --stage STAGE` for deterministic rejection, selecting the
+failed or earlier invalid stage. It consumes an attempt and preserves receipts
+and invalidated artifacts. Neither action automatically relaunches a model.
+Inspect status, approve the new exact binding and explicitly advance.
+`cancel RUN_DIR` is terminal. Failed preparation or missing snapshots require a
+new reviewed run. Never manually change host state to bypass these rules.
+
+## Other adapters
 
 For a failed run, preserve its worktree/evidence and begin a separately
 identified replacement run after operator review. Record the previous run ID,

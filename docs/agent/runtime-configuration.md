@@ -55,8 +55,8 @@ Source flags must describe provenance already established by the caller. They do
 
 The preflight resolves only valid canonical stage/role pairs. It visits the configured model bindings in order, skipping absent, unready or stale registrations. A ready registration lacking a required canonical model capability blocks resolution rather than silently falling back, matching the existing routing policy. Local-only validation applies to the whole profile, including fallbacks. Resolution always reports `execution_authority: false`.
 
-## Execution remains separate
+## Opt-in execution host
 
-Neither this helper nor the UI implements a governed HTTP agent loop or modifies `resolve-runtime.py`, canonical routing, a run overlay or an active run. The existing Claude Code adapter and pipeline orchestration remain unchanged. A future runtime host must enforce the stage/role capabilities, bounded context and tools, independent verification, approval checkpoints, interruption/recovery and append-only runtime events before execution integration can be enabled.
+This helper remains read-only and does not modify `resolve-runtime.py`, canonical routing or an active run. The separate [governed host](../governed-host.md) consumes the reviewed configuration with explicit execution policy, risk facts and independently registered inventory. It implements all four HTTP tool loops, constrained Docker commands, distinct stage/verifier invocations, bound checkpoints, evidence reconciliation and explicit recovery. Console's separate cockpit can control runs registered with this host; imported evidence stays read-only. The Claude Code adapter remains available independently.
 
 Project facts continue to use the separate `project-profile.json` contract. A project profile cannot grant runtime-routing authority. A runtime configuration likewise cannot change governance, add capabilities, execute commands, approve a run or authorize publication.

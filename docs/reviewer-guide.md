@@ -1,8 +1,8 @@
 # Review Forge in ten minutes
 
-Forge turns a software-change request into a bounded sequence of clarification, planning, test-driven implementation and independent review. Its output is a reviewable Git worktree plus structured evidence. A human or trusted platform decides whether that work should be published.
+Forge turns a software-change request into a bounded sequence of clarification, planning, test-driven implementation and independent review. Its output is a reviewable worktree or disposable source snapshot, a patch and structured evidence. A human or trusted platform decides whether that work should be published.
 
-Forge is the product. **Local RGR** is the delivery protocol; **RGR** refers to the red, green, refactor test cycle inside that protocol. **Forge Console** is an optional configuration companion and a separate workbench for other agents. **Rigor Route** is a future control-plane compatibility contract, not an installed service.
+Forge is the product. **Local RGR** is the delivery protocol; **RGR** refers to the red, green, refactor test cycle inside it. **Forge Console** is an optional configuration companion, governed-host cockpit and separate workbench for other agents. **Rigor Route** is a future control-plane compatibility contract, not an installed service.
 
 ## Follow one request
 
@@ -30,7 +30,7 @@ Example: “Make the greeting function greet a supplied name and reject an empty
 - Model/provider choices supplied by the operator or execution host. A route declaration does not install or authenticate a runtime.
 - A reproducible [synthetic evidence example](getting-started/evidence-example.md) and a [supervised first-change recipe](getting-started/first-change.md).
 
-The shipped Claude Code integration is prompt-based. Filesystem/tool restrictions and trustworthy command execution must be supplied by its host. Generic HTTP execution, authenticated approval capture and automatic multi-attempt recovery are not implemented by these utilities. See the [enforcement map](enforcement.md).
+The Claude Code integration is prompt-based and needs permissions supplied by that host. The separate [governed host](governed-host.md) implements four HTTP protocols, scoped model tools, Docker commands, private SQLite state, bound approvals, locally authenticated receipts and explicit recovery. It has controlled protocol/host fixtures and real Docker CI checks; these do not prove live model quality. See the [enforcement map](enforcement.md) for practical limits.
 
 ## Suggested review order
 

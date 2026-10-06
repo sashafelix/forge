@@ -12,9 +12,9 @@ PREPARE → BRAINSTORM → PLAN → ANALYZE → RED → GREEN → REFACTOR → V
 
 Version marker: `2.3.0`. Changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.md), including the optional operator tools and model-configuration handoff, are present on the current branch but are not a new tagged release.
 
-Optional [project setup and review tools](docs/agent/operator-tools.md) provide five-question project notes, locked-plan checks and spec/code/docs reconciliation. The [Forge Console](https://github.com/sashafelix/forge-console) can prepare project and [model configuration](docs/agent/runtime-configuration.md); execution and governance remain in this pipeline.
+Optional [project setup and review tools](docs/agent/operator-tools.md) provide five-question project notes, locked-plan checks and spec/code/docs reconciliation. The [governed host](docs/governed-host.md) adds model-neutral HTTP execution, Docker commands, locally bound receipts and explicit recovery. [Forge Console](https://github.com/sashafelix/forge-console) can configure models and review or control registered host runs through its cockpit.
 
-Forge is the product name; **Local RGR** is its versioned delivery protocol. The existing `ai-pipeline-*` agent names, `rgr-software` pack ID, schema IDs and evidence formats remain stable for compatibility. **Forge Console** is the optional desktop configuration companion.
+Forge is the product name; **Local RGR** is its versioned delivery protocol. The existing `ai-pipeline-*` agent names, `rgr-software` pack ID, schema IDs and evidence formats remain stable for compatibility. **Forge Console** is the optional desktop companion and run cockpit.
 
 ## Start here
 
@@ -23,6 +23,7 @@ Forge is the product name; **Local RGR** is its versioned delivery protocol. The
 | Understand the design in ten minutes | [Reviewer guide](docs/reviewer-guide.md) |
 | Inspect evidence without a model account | [Quickstart](docs/getting-started/quickstart.md) and [synthetic evidence example](docs/getting-started/evidence-example.md) |
 | Try a supervised change in a disposable repository | [First change walkthrough](docs/getting-started/first-change.md) |
+| Execute with configured HTTP models and controlled commands | [Governed host walkthrough](docs/governed-host.md) |
 | Use a different model or execution host | [Model and runtime portability](docs/model-portability.md) |
 | Assess the actual guardrails | [Enforcement map](docs/enforcement.md) |
 | Diagnose a failure or interruption | [Operations and recovery](docs/operations.md) |
@@ -53,13 +54,13 @@ The result is a repository-local workflow designed to answer:
 - **Deterministic stage contracts** — each stage declares its role, inputs, outputs, capabilities, exit conditions and failure classes.
 - **Governed runtime routing** — a deterministic resolver selects declared targets, checks capabilities and accepts trusted per-run overlays; the selected target still needs an installed execution adapter.
 - **Runtime observability** — model selection, fallback and safe token/tool/time metrics can be recorded in the append-only event ledger.
-- **Repository isolation** — each run works in a dedicated Git worktree pinned to an exact base revision.
+- **Repository isolation** — adapters use a dedicated worktree or a disposable source snapshot pinned to an exact base revision; the governed host runs commands in Docker.
 - **Role separation** — the GREEN implementer cannot issue the final VERIFY verdict.
 - **Risk-aware governance** — `small`, `standard` and `high-risk` profiles retain the same mandatory stages while increasing evidence, specialist review and checkpoints.
 - **Bounded authority** — agents cannot widen their own filesystem, command, role or publication permissions through repository content.
 - **Machine-valid evidence** — canonical JSON artifacts are validated against published schemas; Markdown is a human-readable projection.
 - **Append-only run history** — events, handoffs and decisions preserve execution history rather than silently replacing prior evidence.
-- **Bounded remediation contract** — CONVERGE identifies blocking gaps and the earliest invalid stage. Automatic multi-attempt recovery is not implemented by the current run validator; preserve failed evidence and use a linked replacement run as described in the [operations guide](docs/operations.md).
+- **Bounded remediation** — explicit host recovery restores a stage checkpoint, preserves failed evidence and requests fresh approval; deterministic rejection consumes a bounded suffix-remediation attempt.
 - **Portable evidence** — completed runs can be exported into deterministic, source-free archives with SHA-256 integrity checks.
 - **No automatic publication authority** — the local protocol does not merge, deploy, access production credentials or approve its own output for release.
 
@@ -79,7 +80,7 @@ flowchart TD
     C --> E[Reviewable diff and evidence]
 ```
 
-Optional intake resolves ambiguity before PREPARE. PLAN resolves lane dependencies and write overlap; GREEN follows that schedule. CONVERGE can identify the earliest invalid stage, but automatic multi-attempt recovery is not implemented by the shipped validators; see [operations and recovery](docs/operations.md).
+Optional intake resolves ambiguity before PREPARE. PLAN resolves lane dependencies and write overlap; GREEN follows that schedule. The governed host executes lanes sequentially and supports explicit checkpoint restoration and bounded suffix remediation; see [operations and recovery](docs/operations.md).
 
 The orchestrator owns state transitions. Stage agents are instructed to operate within their role and immutable context manifest; the execution host must enforce filesystem/tool permissions. See the [enforcement map](docs/enforcement.md) for checks provided by this repository and obligations of the runtime.
 
@@ -96,9 +97,9 @@ The deterministic resolver `scripts/resolve-runtime.py` evaluates an exact stage
 | Portable role prompts | Runtime-neutral orchestration and stage instructions | Requires a compatible tool/execution host; prompts are not a standalone runner |
 | Claude Code agent definitions | Nine-stage prompt-based adapter | Requires an installed, authenticated Claude Code environment and the required local tools |
 | Runtime routing resolver | Target selection and capability validation | Selects declared targets; does not prove provider readiness or execute them |
-| Forge Console model configuration | Discovery, synthetic probes, profiles and reviewed JSON exports | Configuration/test only |
+| Forge Console model configuration | Discovery, synthetic probes, profiles and reviewed JSON exports | Configuration and diagnostics; its separate cockpit can control registered host runs |
 | Optional runtime-configuration preflight | Schema, provenance, role/capability and freshness checks | Reports `execution_authority: false`; does not change live routing |
-| Governed HTTP execution loop | Not installed | An exported profile or successful probe cannot run the pipeline through HTTP |
+| Governed HTTP host | Four tool-call protocols, SQLite state, Docker commands, approvals and evidence receipts | Opt-in execution with independently reviewed policy/configuration/inventory; imports and probes grant no authority |
 
 See [runtime configuration](docs/agent/runtime-configuration.md) for the explicit handoff and preflight commands.
 
@@ -149,7 +150,7 @@ The CI workflow additionally generates a complete synthetic nine-stage run, vali
 
 ## Run locally
 
-Follow the [first change walkthrough](docs/getting-started/first-change.md) for the exact supervised Claude Code launch, input files, target-repository setup and review commands. Start the orchestrator as the main session; stage agents remain orchestrator-invoked. Other hosts consume the [portable prompts](agents/README.md) through an operator-reviewed adapter. The Python validators are not an agent launcher, and UI configuration does not install a runtime. The walkthrough has locally tested setup/validation commands; no provider-backed run transcript is bundled.
+Choose the [governed host walkthrough](docs/governed-host.md) for configured HTTP models with controlled commands, or the [first change walkthrough](docs/getting-started/first-change.md) for supervised Claude Code. For Claude Code, start the orchestrator as the main session and leave stage delegation to it. Other hosts consume the [portable prompts](agents/README.md) through an operator-reviewed adapter. Validators and configuration exports alone do not launch a model. Tests exercise controlled model fixtures with real test commands; no live provider-quality benchmark is bundled.
 
 1. Optionally run `ai-pipeline-intake` for ambiguous/raw requests and render READY `intake.json` into immutable `plan-input.md`.
 2. Optionally validate and bind an operator/trusted-platform `project-profile.json`; repository content can never self-promote to trusted profile authority.

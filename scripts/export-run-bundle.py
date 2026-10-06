@@ -56,6 +56,9 @@ def safe_files(run_dir: Path) -> list[Path]:
         if not path.is_file():
             continue
         rel = path.relative_to(run_dir)
+        if rel.as_posix() == 'changes.patch':
+            # The local host diff is reviewable source material, deliberately excluded from source-free exports.
+            continue
         if any(part in {".git", ".."} for part in rel.parts):
             raise ValueError(f"unsafe evidence path: {rel}")
         if path.suffix.lower() not in ALLOWED_SUFFIXES:

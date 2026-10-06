@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from schema_validation import validate_instance
+from evidence_validation import validate_attempts, validate_evidence
+from pipeline_support.common import read_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = ROOT / "docs" / "agent" / "schemas"
@@ -45,7 +47,7 @@ STAGE_RESULTS = {
 
 def load_json(path: Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(read_bytes(path.parent, path.name))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"{path}: invalid JSON: {exc}") from exc
 
@@ -68,7 +70,7 @@ def validate_events(path: Path) -> tuple[list[str], list[dict[str, Any]]]:
     events: list[dict[str, Any]] = []
     previous = 0
     event_schema = schema("run-event.schema.json")
-    for line_no, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for line_no, raw in enumerate(read_bytes(path.parent, path.name).decode('utf-8').splitlines(), 1):
         if not raw.strip():
             continue
         try:
@@ -231,6 +233,9 @@ def validate(run_dir: Path) -> list[str]:
         if isinstance(instance, dict):
             contexts[path.name] = instance
 
+    if errors:
+        return errors
+
     brainstorm = artifacts.get("brainstorm.json", {})
     plan = artifacts.get("detailed-plan.json", {})
     lanes = artifacts.get("lane-resolution.json", {})
@@ -340,9 +345,8 @@ def validate(run_dir: Path) -> list[str]:
     event_story_ids = {event.get("story_id") for event in events if isinstance(event.get("story_id"), str)}
     if story_id is not None and event_story_ids != {story_id}:
         errors.append(f"events.jsonl: story ids {sorted(event_story_ids)} do not match artifacts {story_id}")
-    completed = [event.get("stage") for event in events if event.get("event_type") == "stage.completed"]
-    if completed != STAGES:
-        errors.append(f"events.jsonl: completed stage order must be exactly {STAGES}, got {completed}")
+    errors.extend(validate_attempts(events, convergence.get('attempt', 1)))
+    errors.extend(validate_evidence(run_dir))
     if not any(event.get("event_type") == "lane_plan.resolved" and "lane-resolution.json" in event.get("artifact_refs", []) for event in events):
         errors.append("events.jsonl: missing lane_plan.resolved event referencing lane-resolution.json")
     if intake is not None and not any(event.get("event_type") == "intake.bound" and "intake.json" in event.get("artifact_refs", []) for event in events):
@@ -362,7 +366,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         errors = validate(args.run_dir)
-    except ValueError as exc:
+    except (ValueError, OSError, KeyError, TypeError, UnicodeError, RecursionError) as exc:
         errors = [str(exc)]
     if errors:
         for error in errors:
