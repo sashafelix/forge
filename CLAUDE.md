@@ -1,5 +1,7 @@
 # CLAUDE.md — Forge (Local RGR v2)
 
+This file is Claude Code integration guidance for the portable contracts in `AGENTS.md` and `agents/`. The main-thread launch is documented in `docs/getting-started/first-change.md`; model choice does not change the protocol.
+
 ## Entry
 
 1. For ambiguous/raw work, optionally invoke `ai-pipeline-intake`; it is pre-run only and has no delivery authority.

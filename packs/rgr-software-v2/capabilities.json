@@ -130,10 +130,10 @@
     {
       "id": "structured-intake",
       "required": false,
-      "provider": ".claude/agents/ai-pipeline-intake.md",
+      "provider": "agents/ai-pipeline-intake.md",
       "description": "Resolve task ambiguity before the governed run and render a deterministic immutable plan input.",
       "constraints": [
-        "maximum three question rounds",
+        "maximum five question rounds",
         "intake has no run authority",
         "blocking business decisions are never guessed"
       ]

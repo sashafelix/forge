@@ -1,6 +1,6 @@
 # Forge Runtime Artifacts — Local RGR v2
 
-This folder contains portable schemas, governance subcontracts, evaluation fixtures and per-run evidence.
+This folder contains portable schemas, governance subcontracts, evaluation fixtures and per-run evidence. Start with the [reviewer guide](../reviewer-guide.md), [quickstart](../getting-started/quickstart.md) or [operations guide](../operations.md).
 
 ## Portable pack
 

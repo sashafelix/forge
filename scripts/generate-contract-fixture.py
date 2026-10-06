@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a deterministic complete small-profile run for v2.2 contract/CI testing."""
+"""Generate synthetic small-profile evidence for current contract/CI testing."""
 from __future__ import annotations
 
 import argparse

@@ -1,0 +1,7 @@
+{
+  "stage": "green_code",
+  "role": "implementer",
+  "available_targets": [
+    "operator-primary"
+  ]
+}

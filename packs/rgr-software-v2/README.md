@@ -1,6 +1,6 @@
 # Forge Software Delivery Pack — Local RGR v2.3.0
 
-Forge’s portable Local RGR software-delivery pack.
+Forge’s portable Local RGR software-delivery pack. Its model-neutral role prompts are indexed in [`agents/README.md`](../../agents/README.md); model/provider selection is an execution-host concern.
 
 ## Contents
 

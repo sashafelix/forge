@@ -1,0 +1,288 @@
+{
+  "schema_version": "1.0",
+  "contract_version": "local-rgr-v2.3",
+  "pack_id": "rgr-software",
+  "pack_version": "2.3.0",
+  "policy": {
+    "selection": "first_available_compatible",
+    "overlay_sources": [
+      "operator",
+      "trusted_platform"
+    ],
+    "repository_overrides_forbidden": true,
+    "fallback_requires_reason": true,
+    "capability_mismatch_blocks": true,
+    "runtime_may_not_expand_authority": true,
+    "learned_context_is_advisory": true
+  },
+  "targets": [
+    {
+      "id": "operator-primary",
+      "adapter": "custom",
+      "model_ref": "env:FORGE_PRIMARY_MODEL",
+      "endpoint_ref": "env:FORGE_PRIMARY_ENDPOINT",
+      "locality": "local",
+      "cost_class": "local",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "infrastructure_review",
+        "migration_review",
+        "planning",
+        "reasoning",
+        "repository_analysis",
+        "review",
+        "security_review",
+        "specification",
+        "structured_output",
+        "test_generation",
+        "tool_calling",
+        "verification"
+      ]
+    },
+    {
+      "id": "operator-fallback",
+      "adapter": "custom",
+      "model_ref": "env:FORGE_FALLBACK_MODEL",
+      "endpoint_ref": "env:FORGE_FALLBACK_ENDPOINT",
+      "locality": "external",
+      "cost_class": "metered",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "infrastructure_review",
+        "migration_review",
+        "planning",
+        "reasoning",
+        "repository_analysis",
+        "review",
+        "security_review",
+        "specification",
+        "structured_output",
+        "test_generation",
+        "tool_calling",
+        "verification"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "prepare-repository-analyst",
+      "stage": "prepare",
+      "role": "repository_analyst",
+      "required_model_capabilities": [
+        "repository_analysis",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "brainstorm-specifier",
+      "stage": "brainstorm",
+      "role": "specifier",
+      "required_model_capabilities": [
+        "specification",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "plan-orchestrator",
+      "stage": "plan",
+      "role": "orchestrator",
+      "required_model_capabilities": [
+        "planning",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "analyze-consistency",
+      "stage": "analyze",
+      "role": "consistency_analyst",
+      "required_model_capabilities": [
+        "review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "red-test-author",
+      "stage": "red_test",
+      "role": "test_author",
+      "required_model_capabilities": [
+        "test_generation",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "green-implementer",
+      "stage": "green_code",
+      "role": "implementer",
+      "required_model_capabilities": [
+        "code_generation",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "refactor-refactorer",
+      "stage": "refactor",
+      "role": "refactorer",
+      "required_model_capabilities": [
+        "code_generation",
+        "code_review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "verify-independent",
+      "stage": "quality_gate",
+      "role": "independent_verifier",
+      "required_model_capabilities": [
+        "verification",
+        "code_review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "converge-reviewer",
+      "stage": "converge",
+      "role": "convergence_reviewer",
+      "required_model_capabilities": [
+        "verification",
+        "review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-risk",
+      "stage": "*",
+      "role": "risk_reviewer",
+      "required_model_capabilities": [
+        "verification",
+        "review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-threat",
+      "stage": "*",
+      "role": "threat_modeler",
+      "required_model_capabilities": [
+        "security_review",
+        "verification",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-migration",
+      "stage": "*",
+      "role": "migration_reviewer",
+      "required_model_capabilities": [
+        "migration_review",
+        "verification",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-infrastructure",
+      "stage": "*",
+      "role": "infrastructure_reviewer",
+      "required_model_capabilities": [
+        "infrastructure_review",
+        "verification",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-contract",
+      "stage": "*",
+      "role": "contract_reviewer",
+      "required_model_capabilities": [
+        "verification",
+        "review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    },
+    {
+      "id": "specialist-accessibility",
+      "stage": "*",
+      "role": "accessibility_reviewer",
+      "required_model_capabilities": [
+        "verification",
+        "review",
+        "reasoning",
+        "structured_output"
+      ],
+      "targets": [
+        "operator-primary",
+        "operator-fallback"
+      ]
+    }
+  ]
+}

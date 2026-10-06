@@ -1,5 +1,10 @@
 # Claude Code Sub-Agents — Local RGR v2
 
+These are compatibility copies of the canonical [portable prompts](../../agents/README.md).
+Edit `agents/` and run `python3 scripts/sync-agent-adapters.py --write` from the
+Forge root; CI checks that the copies match. Follow the [first-change guide](../../docs/getting-started/first-change.md)
+to launch the orchestrator as the main session. Model choice belongs to the host.
+
 For ambiguous/raw tasks, `ai-pipeline-intake` may run first. It is outside the governed run and only produces a READY intake/plan handoff.
 
 Invoke only `ai-pipeline-rgr-orchestrator` for the governed delivery run.
