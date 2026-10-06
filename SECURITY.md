@@ -1,6 +1,6 @@
 # Security and trust model
 
-Local RGR is designed to reduce the authority granted to AI coding agents and to make important execution claims independently inspectable. It is not an operating-system sandbox and should not be treated as one.
+Forge is designed to reduce the authority granted to AI coding agents and to make important execution claims independently inspectable. It is not an operating-system sandbox and should not be treated as one.
 
 ## Trust model
 

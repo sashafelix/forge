@@ -1,6 +1,6 @@
-# rgr-software v2.3.0
+# Forge Software Delivery Pack — Local RGR v2.3.0
 
-Portable local RGR software-delivery pack.
+Forge’s portable Local RGR software-delivery pack.
 
 ## Contents
 

@@ -1,4 +1,4 @@
-# CLAUDE.md — agent-dev-pipeline v2
+# CLAUDE.md — Forge (Local RGR v2)
 
 ## Entry
 

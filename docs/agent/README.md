@@ -1,4 +1,4 @@
-# Agent Runtime Artifacts — Local RGR v2
+# Forge Runtime Artifacts — Local RGR v2
 
 This folder contains portable schemas, governance subcontracts, evaluation fixtures and per-run evidence.
 

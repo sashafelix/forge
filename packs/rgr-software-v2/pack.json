@@ -3,7 +3,7 @@
   "pack_id": "rgr-software",
   "pack_version": "2.3.0",
   "protocol_version": "local-rgr-v2.3",
-  "name": "RGR Software Delivery Pack",
+  "name": "Forge Software Delivery Pack",
   "description": "Portable deterministic software-delivery protocol with governed roles, profiles, evidence and bounded convergence.",
   "entrypoint": "ai-pipeline-rgr-orchestrator",
   "stage_contracts": [
