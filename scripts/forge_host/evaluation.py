@@ -21,7 +21,7 @@ def grade(engine):
         broker.purpose = 'regrade-positive'
         engine.fresh_verify(broker, command)
         positive = broker.commands[-1]
-        if positive['exit_code'] or any(c['outcome'] != 'passed' for c in positive['tests']['cases']):
+        if positive.get('test_error') or not positive['tests'] or positive['exit_code'] or any(c['outcome'] != 'passed' for c in positive['tests']['cases']):
             raise ValueError('Fresh patch regrade failed or skipped tests')
         control = engine.store.root / 'negative-control'
         if control.exists(): shutil.rmtree(control)
@@ -34,7 +34,7 @@ def grade(engine):
         broker.purpose = 'regrade-negative-control'
         broker.command(command)
         negative = broker.commands[-1]
-        if not negative['exit_code'] or not negative['tests']['failed'] or negative['tests']['errors']:
+        if negative.get('test_error') or not negative['tests'] or not negative['exit_code'] or not negative['tests']['failed'] or negative['tests']['errors']:
             raise ValueError('Negative control did not fail a regression assertion on the unpatched base')
         result = {'schema_version': '1.0', 'run_id': state['id'], 'base_revision': state['base_revision'],
                   'status': 'tests_passed_with_negative_control', 'positive_receipt': positive['id'],

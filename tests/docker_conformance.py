@@ -6,14 +6,67 @@ import sys
 import tempfile
 import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from host_fixtures import target_repository, fixture_documents, ControlledProvider, inputs, finish
+from host_fixtures import target_repository, fixture_documents, ControlledProvider, inputs, finish, approve
 from forge_host.engine import Engine
 from forge_host.sandbox import DockerSandbox
 from forge_host.store import atomic
+from forge_host.tools import PolicyViolation
+
+
+def prepare_with_test_prelude(root, prelude, timeout=30):
+    repo=root / 'target';target_repository(repo)
+    configuration, policy, inventory, facts=inputs()
+    policy.update(image=os.environ['FORGE_DOCKER_IMAGE'], command_timeout=timeout)
+    provider=ControlledProvider(fixture_documents(root / 'documents'))
+    def factory(*args):
+        session=provider(*args)
+        next_action=session.next
+        def next_with_prelude():
+            calls=next_action()
+            for call in calls:
+                action=call['arguments']
+                if action.get('kind')=='write' and action.get('path')=='test_fixture.py':
+                    action['text']=prelude+action['text']
+            return calls
+        session.next=next_with_prelude
+        return session
+    engine=Engine.prepare(repo, root / 'run', 'Implement fixture value.', facts, configuration,
+                          policy, inventory, session_factory=factory)
+    approve(engine)
+    for _ in range(4):engine.advance()
+    return engine
 
 
 @unittest.skipUnless(os.environ.get('FORGE_DOCKER_IMAGE'), 'Explicit Docker conformance image is required')
 class DockerTests(unittest.TestCase):
+    def test_cache_symlink_cannot_reach_checkpoint_copying(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            private=root / 'private.txt';private.write_text('host-only-sentinel')
+            prelude=("from pathlib import Path\nPath('__pycache__').mkdir(exist_ok=True)\n"
+                     f"Path('__pycache__/escape').symlink_to({str(private)!r})\n")
+            engine=prepare_with_test_prelude(root, prelude)
+            with self.assertRaisesRegex(PolicyViolation, 'Symlink'):engine.advance()
+            self.assertEqual(engine.view()['status'], 'failed')
+            self.assertFalse((engine.store.root / 'checkpoints/green_code').exists())
+            receipt=next(r for r in engine.store.receipts() if r['kind']=='command')
+            self.assertIn('Symlink', receipt['policy_error'])
+            self.assertIn('AssertionError', (engine.bundle / receipt['output_ref']).read_text())
+
+    def test_invalid_collection_and_timeout_retain_output(self):
+        for label, prelude, error in (
+            ('invalid', "print('before invalid collection', flush=True)\nraise RuntimeError('collection fixture')\n", ValueError),
+            ('timeout', "import time\nprint('before timeout', flush=True)\ntime.sleep(10)\n", InterruptedError)):
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary:
+                engine=prepare_with_test_prelude(Path(temporary), prelude, timeout=1)
+                with self.assertRaises(error):engine.advance()
+                self.assertEqual(engine.view()['status'], 'failed')
+                self.assertEqual(engine.view()['recoverable'], label=='timeout')
+                receipt=next(r for r in engine.store.receipts() if r['kind']=='command')
+                self.assertIn('before '+('invalid collection' if label=='invalid' else 'timeout'),
+                              (engine.bundle / receipt['output_ref']).read_text())
+                self.assertIn('test_error' if label=='invalid' else 'stop_error', receipt)
+
     def test_real_nine_stage_run(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

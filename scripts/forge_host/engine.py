@@ -416,6 +416,8 @@ class Engine:
     def bind_tests(self, stage, document, broker):
         receipt = broker.commands[-1]
         tests = receipt['tests']
+        if receipt.get('test_error') or not tests:
+            raise ValueError('Registered tests did not provide valid executed results: '+receipt.get('test_error', 'missing test summary'))
         mapping = read_json(self.bundle, 'detailed-plan.json')['criterion_test_map']
         observed = {case['id']: case['outcome'] for case in tests['cases']}
         if stage == 'red_test':

@@ -110,12 +110,24 @@ class DockerSandbox:
                     finally:
                         process.kill();process.wait(timeout=15)
             output.seek(0);data=output.read(self.policy['max_output_bytes']+1)
-        if reason or len(data)>self.policy['max_output_bytes']:raise InterruptedError(f'Sandbox command stopped: {reason or "output limit"}')
-        text=data.decode('utf-8','replace')
+        stop_error=f'Sandbox command stopped: {reason or "output limit"}' if reason or len(data)>self.policy['max_output_bytes'] else None
+        text=data[:self.policy['max_output_bytes']].decode('utf-8','replace')
+        summary=None;test_error=None
         try:
-            report=read_bytes(workspace,self.policy['report_path']) if report_path else None
-            summary=test_summary(text,self.policy['test_format'],report) if is_test else None
+            if is_test and not stop_error:
+                report=read_bytes(workspace,self.policy['report_path']) if report_path else None
+                summary=test_summary(text,self.policy['test_format'],report)
+                if (exit_code==0 and (summary['failed'] or summary['errors'])) or (exit_code!=0 and not (summary['failed'] or summary['errors'])):
+                    raise ValueError('Command exit contradicts executed test results')
+        except (ValueError,OSError,ET.ParseError) as exc:
+            summary=None;test_error=str(exc)[:1000]
         finally:
-            if report_path and report_path.exists():report_path.unlink()
-        if summary and ((exit_code==0 and (summary['failed'] or summary['errors'])) or (exit_code!=0 and not (summary['failed'] or summary['errors']))):raise ValueError('Command exit contradicts executed test results')
-        return {'argv':argv,'exit_code':exit_code,'output':text,'tests':summary,'wall_time_ms':int((time.monotonic()-started)*1000)}
+            if report_path:
+                # The command may have replaced a report ancestor with a link.
+                try:contained(workspace,self.policy['report_path']).unlink(missing_ok=True)
+                except (ValueError,OSError):
+                    summary=None;test_error='Unsafe or unremovable JUnit report'
+        result={'argv':argv,'exit_code':exit_code,'output':text,'tests':summary,'wall_time_ms':int((time.monotonic()-started)*1000)}
+        if test_error:result['test_error']=test_error
+        if stop_error:result['stop_error']=stop_error
+        return result

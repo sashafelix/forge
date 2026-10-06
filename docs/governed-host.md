@@ -64,6 +64,8 @@ Commands run as non-root in Docker with no network, a read-only container root, 
 
 Receipts capture actual argv, exit, output hash, unique case IDs/counts and duration. Use verbose unittest/pytest or JUnit with a separate `report_path`. Empty, all-skipped, malformed or inconsistent reporting is rejected. Test commands cannot mutate story files. RED must fail mapped regression assertions without collection/runtime errors. GREEN/REFACTOR/VERIFY must pass mapped cases without skips. Test semantics and sufficiency still need independent review.
 
+Invalid test reports retain the bounded raw command log and an error receipt; mandatory stage tests still block advancement. Stopped commands retain partial output. Executed filesystem violations retain evidence and stop the stage immediately. Cache folders may be omitted from story fingerprints, but links anywhere in the workspace are rejected before checkpoint copying.
+
 VERIFY uses a fresh base plus only the locked patch and frozen tests. Closure reconciles the current workspace with independently executed receipts, all mandatory artifacts, scope and evidence hashes. Unvalidated proposals survive rejection separately and grant no authority.
 
 ```bash

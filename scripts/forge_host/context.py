@@ -10,8 +10,8 @@ def files(root: Path, max_files: int = 5000) -> dict[str,str]:
     result={};total=0
     for path in sorted(root.rglob('*')):
         rel=path.relative_to(root)
-        if any(p in IGNORED for p in rel.parts):continue
         if path.is_symlink():raise ValueError(f'Symlink in workspace: {rel}')
+        if any(p in IGNORED for p in rel.parts):continue
         if '.git' in rel.parts:raise ValueError('Git metadata is forbidden in the disposable workspace')
         if not path.is_file():continue
         if len(result)>=max_files:raise ValueError('Workspace file limit exceeded')

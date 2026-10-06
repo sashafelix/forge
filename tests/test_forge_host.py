@@ -7,7 +7,7 @@ from forge_host.engine import Engine
 from forge_host.store import Store
 from forge_host.sandbox import test_summary
 from forge_host.policy import validate
-from forge_host.tools import PolicyViolation
+from forge_host.tools import Broker, PolicyViolation
 
 
 class HostTests(unittest.TestCase):
@@ -99,10 +99,68 @@ class HostTests(unittest.TestCase):
         class Mutating(ControlledSandbox):
             def execute(self, workspace, command, cancelled):
                 (workspace / 'backend/fixture.py').write_text('bad')
-                return {'exit_code': 0, 'output': 'changed'}
+                return {'argv': self.policy['commands'][command], 'exit_code': 0, 'output': 'changed',
+                        'tests': None, 'wall_time_ms': 1}
         broker = Broker(engine.store, engine.workspace, engine.bundle, 'quality_gate', 'independent_verifier',
                         'fixture-id', Mutating(engine.store.state()['policy'], 'id'), [], {})
         with self.assertRaises(PolicyViolation): broker.command('tests')
+        receipt=broker.commands[-1]
+        self.assertIn('outside', receipt['policy_error'])
+        self.assertEqual((engine.bundle / receipt['output_ref']).read_text(), 'changed')
+        self.assertEqual(json.loads((engine.bundle / f"evidence/receipt-{receipt['id']}.json").read_text()), receipt)
+
+    def test_cache_symlink_stops_stage_before_any_checkpoint_can_follow_it(self):
+        engine, _=create_engine(self.root, minimum='standard');approve(engine)
+        for _ in range(4):engine.advance()
+        sentinel=self.root / 'private.txt';sentinel.write_text('host-only-sentinel')
+        class Linking(ControlledSandbox):
+            def execute(self, workspace, command, cancelled):
+                result=super().execute(workspace, command, cancelled)
+                (workspace / '__pycache__').mkdir(exist_ok=True)
+                (workspace / '__pycache__/escape').symlink_to(sentinel)
+                return result
+        engine.sandbox=Linking(engine.store.state()['policy'], 'cache-probe')
+        with self.assertRaisesRegex(PolicyViolation, 'Symlink'):engine.advance()
+        self.assertEqual(engine.view()['status'], 'failed')
+        self.assertEqual(len(engine.view()['completed_stages']), 4)
+        self.assertFalse((engine.store.root / 'checkpoints/green_code').exists())
+        self.assertFalse((engine.store.root / 'checkpoints/red_test/workspace/__pycache__/escape').exists())
+        receipt=next(r for r in engine.store.receipts() if r['kind']=='command')
+        self.assertIn('Symlink', receipt['policy_error'])
+        self.assertIn('AssertionError', (engine.bundle / receipt['output_ref']).read_text())
+        engine.recover('red_test')
+        self.assertFalse((engine.workspace / '__pycache__/escape').exists())
+        engine.sandbox=ControlledSandbox(engine.store.state()['policy'], 'restored')
+        self.assertEqual(finish(engine)['status'], 'completed')
+        self.assertTrue(engine.verify_receipts()['locally_authenticated'])
+
+    def test_malformed_results_keep_raw_evidence_and_block_mandatory_tests(self):
+        engine, _=create_engine(self.root);approve(engine)
+        for _ in range(4):engine.advance()
+        class Invalid(ControlledSandbox):
+            def execute(self, workspace, command, cancelled):
+                return {'argv': self.policy['commands'][command], 'exit_code': 2, 'output': 'collection failed\n',
+                        'tests': None, 'test_error': 'Missing unittest outcome', 'wall_time_ms': 1}
+        engine.sandbox=Invalid(engine.store.state()['policy'], 'invalid')
+        with self.assertRaisesRegex(ValueError, 'valid executed results'):engine.advance()
+        self.assertEqual(engine.view()['status'], 'failed')
+        self.assertTrue(list((engine.bundle / 'evidence').glob('proposal-*.json')))
+        receipt=next(r for r in engine.store.receipts() if r['kind']=='command')
+        self.assertEqual((engine.bundle / receipt['output_ref']).read_text(), 'collection failed\n')
+        self.assertEqual(receipt['test_error'], 'Missing unittest outcome')
+
+    def test_stopped_command_keeps_partial_log_and_requires_recovery(self):
+        engine, _=create_engine(self.root);approve(engine)
+        for _ in range(4):engine.advance()
+        class Stopped(ControlledSandbox):
+            def execute(self, workspace, command, cancelled):
+                return {'argv': self.policy['commands'][command], 'exit_code': 137, 'output': 'partial result\n',
+                        'tests': None, 'stop_error': 'Sandbox command stopped: timeout', 'wall_time_ms': 1}
+        engine.sandbox=Stopped(engine.store.state()['policy'], 'stopped')
+        with self.assertRaisesRegex(InterruptedError, 'timeout'):engine.advance()
+        self.assertTrue(engine.view()['recoverable'])
+        receipt=next(r for r in engine.store.receipts() if r['kind']=='command')
+        self.assertEqual((engine.bundle / receipt['output_ref']).read_text(), 'partial result\n')
 
     def test_worker_lease_rejects_concurrent_worker(self):
         engine, _ = create_engine(self.root)

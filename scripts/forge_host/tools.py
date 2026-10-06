@@ -34,11 +34,13 @@ class Broker:
         return False
 
     def check_changes(self,before: dict[str,str]):
-        after=files(self.workspace)
+        try:after=files(self.workspace)
+        except (ValueError,OSError) as exc:raise PolicyViolation('Unsafe command workspace: '+str(exc)[:1000]) from exc
         changes={name for name in set(before)|set(after) if before.get(name)!=after.get(name)}
         bad=[name for name in changes if not self.can_write(name)]
         if bad:raise PolicyViolation('Command changed files outside the active role/locked plan: '+', '.join(sorted(bad)[:20]))
         if any(after.get(name)!=fingerprint for name,fingerprint in self.frozen.items()):raise PolicyViolation('Frozen RED tests changed')
+        return after
 
     def execute(self,action: dict) -> dict:
         if self.store.state()['status']=='cancelled':raise PolicyViolation('Run cancelled')
@@ -84,9 +86,13 @@ class Broker:
         before=files(self.workspace);command_id=uuid.uuid4().hex
         self.store.event('command.started',stage=self.stage,actor_role=self.role,invocation_id=self.invocation,safe_summary=name)
         started=now(); result=self.sandbox.execute(self.workspace,name,lambda:self.store.state()['status']=='cancelled')
-        self.check_changes(before)
-        if name in {self.policy['test_command'], self.policy.get('verify_command', self.policy['test_command'])} and files(self.workspace)!=before:
-            raise PolicyViolation('Test command changed story files; its result cannot authenticate this patch')
+        violation=None
+        try:
+            after=self.check_changes(before)
+            if name in {self.policy['test_command'], self.policy.get('verify_command', self.policy['test_command'])} and after!=before:
+                raise PolicyViolation('Test command changed story files; its result cannot authenticate this patch')
+        except PolicyViolation as exc:
+            violation=str(exc)[:1000];result['policy_error']=violation
         output=result.pop('output')
         # Known host credentials never enter evidence even if a provider/command echoes one.
         for provider in self.store.state()['configuration']['providers']:
@@ -100,5 +106,8 @@ class Broker:
             **result,'output_ref':ref,'output_sha256':hashlib.sha256(output.encode()).hexdigest()})
         atomic(self.bundle/f'evidence/receipt-{command_id}.json',json.dumps(receipt,indent=2).encode())
         self.commands.append(receipt)
-        self.store.event('command.completed',stage=self.stage,actor_role=self.role,invocation_id=self.invocation,artifact_refs=[ref,f'evidence/receipt-{command_id}.json'],safe_summary=f'{name}: exit {receipt["exit_code"]}')
-        return {key:receipt[key] for key in ('id','command_id','exit_code','tests','output_ref')}
+        failure=violation or result.get('stop_error') or result.get('test_error')
+        self.store.event('command.completed',stage=self.stage,actor_role=self.role,invocation_id=self.invocation,artifact_refs=[ref,f'evidence/receipt-{command_id}.json'],safe_summary=f'{name}: exit {receipt["exit_code"]}'+('; rejected: '+failure if failure else ''))
+        if violation:raise PolicyViolation(violation)
+        if result.get('stop_error'):raise InterruptedError(result['stop_error'])
+        return {key:receipt[key] for key in ('id','command_id','exit_code','tests','output_ref','test_error') if key in receipt}
