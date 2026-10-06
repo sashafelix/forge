@@ -1,0 +1,14 @@
+{
+  "story_id": "DEMO-STORY-ID",
+  "facts": {
+    "risk_tags": [],
+    "blast_radius": "low",
+    "uncertainty": "low",
+    "changed_module_count": 1,
+    "cross_service": false,
+    "contract_change": false,
+    "data_migration": false,
+    "security_sensitive": false,
+    "infrastructure_change": false
+  }
+}

@@ -47,7 +47,7 @@ Both review commands use exit `0` for clear/advisory-only results, `1` for block
 
 ## Configuration-only desktop companion
 
-[agent-pipeline-ui](https://github.com/sashafelix/agent-pipeline-ui) can prepare a `project-profile.json` using the existing profile schema `1.0`. Review its project facts and explicitly supply it as operator input:
+[Forge Console](https://github.com/sashafelix/forge-console) can prepare a `project-profile.json` using the existing profile schema `1.0`. Review its project facts and explicitly supply it as operator input:
 
 ```bash
 python3 scripts/validate-project-profile.py /path/to/project-profile.json

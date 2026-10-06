@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added model-neutral canonical role prompts, checked Claude Code adapter copies and an operator-routing example without a required model/provider.
+- Added reviewer, quickstart, first-change, evidence, enforcement and recovery guides; documented current runtime and multi-attempt validation limits.
+- Corrected the five-round capability declaration, PLAN lane-resolution diagram and Forge Console link.
+
 - Renamed the product to Forge and its desktop configuration companion to Forge Console. Existing agent names, protocol/pack identifiers, schema IDs and evidence formats remain compatible.
 
 - Replaced inherited project acronyms, domain fields and sample models and log prefixes with fictional inventory examples; documented neutral example-data conventions.

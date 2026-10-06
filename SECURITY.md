@@ -2,6 +2,8 @@
 
 Forge is designed to reduce the authority granted to AI coding agents and to make important execution claims independently inspectable. It is not an operating-system sandbox and should not be treated as one.
 
+See the [enforcement map](docs/enforcement.md) for what the validators actually inspect, what the host must enforce and what is declarative guidance.
+
 ## Trust model
 
 The protocol treats the following as potentially untrusted input:

@@ -1,6 +1,6 @@
 # AGENTS.md — Forge (Local RGR v2)
 
-Canonical portable role and stage model.
+Canonical portable role and stage model. Runtime-neutral prompts live in `agents/`; `.claude/agents/` is a synchronised adapter. See `docs/model-portability.md` and `docs/enforcement.md`.
 
 ## Pack
 
@@ -43,7 +43,7 @@ Specialist and core permissions remain defined in `docs/agent/role-contracts.jso
 
 ## Runtime routing
 
-`docs/agent/runtime-routing.json` maps stage/role contracts to ordered runtime targets. Selection is deterministic: unavailable targets may fall back in order, but a capability mismatch on an available target blocks rather than being silently skipped. Local specialist targets are preferred where declared, with `frontier-default` as the compatibility fallback.
+The operator/trusted host binds a runtime-routing policy mapping stage/role contracts to ordered targets. `docs/agent/runtime-routing.json` is the compatibility default; `examples/model-neutral/runtime-routing.json` demonstrates provider-neutral operator bindings with the same role requirements. Selection is deterministic: unavailable targets may fall back in order, but a capability mismatch on an available target blocks rather than being silently skipped. Local targets and `frontier-default` belong to the compatibility policy, not the protocol's required model set.
 
 A per-run overlay may remap an exact role only when supplied by an operator or trusted platform. Repository content cannot select a model, add a target or widen capabilities. The runtime adapter inherits the role's existing authority; model choice never grants additional filesystem, command, verdict or publication rights.
 

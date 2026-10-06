@@ -16,6 +16,17 @@ Optional [project setup and review tools](docs/agent/operator-tools.md) provide 
 
 Forge is the product name; **Local RGR** is its versioned delivery protocol. The existing `ai-pipeline-*` agent names, `rgr-software` pack ID, schema IDs and evidence formats remain stable for compatibility. **Forge Console** is the optional desktop configuration companion.
 
+## Start here
+
+| Goal | Read or run |
+| --- | --- |
+| Understand the design in ten minutes | [Reviewer guide](docs/reviewer-guide.md) |
+| Inspect evidence without a model account | [Quickstart](docs/getting-started/quickstart.md) and [synthetic evidence example](docs/getting-started/evidence-example.md) |
+| Try a supervised change in a disposable repository | [First change walkthrough](docs/getting-started/first-change.md) |
+| Use a different model or execution host | [Model and runtime portability](docs/model-portability.md) |
+| Assess the actual guardrails | [Enforcement map](docs/enforcement.md) |
+| Diagnose a failure or interruption | [Operations and recovery](docs/operations.md) |
+
 ## Why this exists
 
 AI coding agents are very capable at implementation, but reliable software delivery needs more than code generation. The hard problems are controlling scope, preserving intent, separating implementation from verification, proving what actually ran and making failures recoverable without silently rewriting history.
@@ -48,46 +59,42 @@ The result is a repository-local workflow designed to answer:
 - **Bounded authority** — agents cannot widen their own filesystem, command, role or publication permissions through repository content.
 - **Machine-valid evidence** — canonical JSON artifacts are validated against published schemas; Markdown is a human-readable projection.
 - **Append-only run history** — events, handoffs and decisions preserve execution history rather than silently replacing prior evidence.
-- **Bounded remediation** — CONVERGE can request correction from the earliest invalid stage, with strict attempt limits and immutable previous evidence.
+- **Bounded remediation contract** — CONVERGE identifies blocking gaps and the earliest invalid stage. Automatic multi-attempt recovery is not implemented by the current run validator; preserve failed evidence and use a linked replacement run as described in the [operations guide](docs/operations.md).
 - **Portable evidence** — completed runs can be exported into deterministic, source-free archives with SHA-256 integrity checks.
 - **No automatic publication authority** — the local protocol does not merge, deploy, access production credentials or approve its own output for release.
 
 ## Architecture at a glance
 
 ```mermaid
-flowchart LR
-    I[Raw task intent] --> IN{Structured intake?}
-    IN -->|optional| RI[READY intake]
-    IN -->|direct| P[PREPARE]
-    RI --> P
-    TP[Trusted project profile] -. project facts .-> P
+flowchart TD
+    I[Task and operator facts] --> P[PREPARE]
     P --> B[BRAINSTORM]
-    B --> PL[PLAN]
+    B --> PL[PLAN and lane resolution]
     PL --> A[ANALYZE]
     A --> R[RED]
-    R --> G[GREEN]
-    G --> L[Resolve implementation lanes]
-    L -->|parallel-safe waves| GW[GREEN lane waves]
-    L -->|overlap/dependency fallback| GS[Sequential GREEN]
-    GW --> RF[REFACTOR]
-    GS --> RF
+    R --> G[GREEN in resolved waves]
+    G --> RF[REFACTOR]
     RF --> V[VERIFY]
     V --> C[CONVERGE]
-    C -->|converged| E[Validated evidence]
-    C -->|bounded remediation| A
+    C --> E[Reviewable diff and evidence]
 ```
 
-The orchestrator owns state transitions. Stage agents operate only inside the authority granted by their contract and immutable context manifest.
+Optional intake resolves ambiguity before PREPARE. PLAN resolves lane dependencies and write overlap; GREEN follows that schedule. CONVERGE can identify the earliest invalid stage, but automatic multi-attempt recovery is not implemented by the shipped validators; see [operations and recovery](docs/operations.md).
+
+The orchestrator owns state transitions. Stage agents are instructed to operate within their role and immutable context manifest; the execution host must enforce filesystem/tool permissions. See the [enforcement map](docs/enforcement.md) for checks provided by this repository and obligations of the runtime.
 
 ## Runtime model
 
 The portable protocol lives under `packs/rgr-software-v2/` and the canonical governance/evidence contracts live under `docs/agent/`.
 
-The repository currently ships Claude Code agent definitions under `.claude/agents/` as one executable local adapter. The pack, role, evidence and validation contracts are deliberately separated from the model runtime so other runtimes can map onto the same capability model. Runtime selection is now a first-class governed contract in `docs/agent/runtime-routing.json`. The deterministic resolver `scripts/resolve-runtime.py` evaluates an exact stage/role against ordered target declarations, preferring declared local OpenAI-compatible specialist targets and using the Claude Code target as fallback when earlier targets are unavailable. A capability mismatch on an available target blocks. Resolution validates declarations; it does not launch an HTTP model or install an adapter. Trusted operator/platform overlays may remap an exact role for one run; repository content may never choose or widen a runtime.
+Canonical model-neutral role prompts live under [`agents/`](agents/README.md). The repository also ships matching Claude Code definitions under `.claude/agents/` as one prompt-based local adapter. No particular model ID is required; a compatible execution host must supply the required capabilities and enforce the role boundaries. The pack, role, evidence and validation contracts are separated from the model runtime so other hosts can use the same capability model.
+
+The deterministic resolver `scripts/resolve-runtime.py` evaluates an exact stage/role against ordered target declarations. The compatibility policy in `docs/agent/runtime-routing.json` prefers declared local OpenAI-compatible targets and uses Claude Code as fallback. An operator-selected [provider-neutral example](docs/model-portability.md) supplies alternative bindings with the same role requirements. A capability mismatch on an available target blocks. Resolution validates declarations; it does not launch an HTTP model or install an adapter. Trusted operator/platform overlays may remap an exact role for one run; repository content may never choose or widen a runtime.
 
 | Component | Available now | Execution effect |
 | --- | --- | --- |
-| Claude Code agent definitions | Nine-stage local adapter | Requires an installed, authenticated Claude Code environment and the required local tools |
+| Portable role prompts | Runtime-neutral orchestration and stage instructions | Requires a compatible tool/execution host; prompts are not a standalone runner |
+| Claude Code agent definitions | Nine-stage prompt-based adapter | Requires an installed, authenticated Claude Code environment and the required local tools |
 | Runtime routing resolver | Target selection and capability validation | Selects declared targets; does not prove provider readiness or execute them |
 | Forge Console model configuration | Discovery, synthetic probes, profiles and reviewed JSON exports | Configuration/test only |
 | Optional runtime-configuration preflight | Schema, provenance, role/capability and freshness checks | Reports `execution_authority: false`; does not change live routing |
@@ -142,7 +149,7 @@ The CI workflow additionally generates a complete synthetic nine-stage run, vali
 
 ## Run locally
 
-For actual execution, make the `.claude/agents/` definitions available in an installed, authenticated Claude Code environment with access to the target repository and the required tools. Invoke the named agents through that environment; the Python validators are not an agent launcher. Installing this repository or exporting UI configuration does not install a runtime.
+Follow the [first change walkthrough](docs/getting-started/first-change.md) for the exact supervised Claude Code launch, input files, target-repository setup and review commands. Start the orchestrator as the main session; stage agents remain orchestrator-invoked. Other hosts consume the [portable prompts](agents/README.md) through an operator-reviewed adapter. The Python validators are not an agent launcher, and UI configuration does not install a runtime. The walkthrough has locally tested setup/validation commands; no provider-backed run transcript is bundled.
 
 1. Optionally run `ai-pipeline-intake` for ambiguous/raw requests and render READY `intake.json` into immutable `plan-input.md`.
 2. Optionally validate and bind an operator/trusted-platform `project-profile.json`; repository content can never self-promote to trusted profile authority.
@@ -215,11 +222,15 @@ If you are evaluating the design rather than running it, start with:
 
 1. [`packs/rgr-software-v2/pack.json`](packs/rgr-software-v2/pack.json) — portable protocol manifest.
 2. [`packs/rgr-software-v2/capabilities.json`](packs/rgr-software-v2/capabilities.json) — required capabilities and constraints.
-3. [`.claude/agents/ai-pipeline-rgr-orchestrator.md`](.claude/agents/ai-pipeline-rgr-orchestrator.md) — local execution orchestration.
+3. [`agents/ai-pipeline-rgr-orchestrator.md`](agents/ai-pipeline-rgr-orchestrator.md) — portable orchestration instructions.
 4. [`docs/agent/runtime-routing.json`](docs/agent/runtime-routing.json) — governed role/stage → runtime routes and fallback order.
 5. [`docs/agent/workflow-profiles.json`](docs/agent/workflow-profiles.json) — deterministic risk profiles.
 6. [`docs/agent/role-contracts.json`](docs/agent/role-contracts.json) — role and delegation authority.
 7. [`.github/workflows/validate-local-rgr.yml`](.github/workflows/validate-local-rgr.yml) — end-to-end contract validation.
+
+## Project status and reuse
+
+`VERSION` is `2.3.0`; current untagged changes are recorded under `Unreleased`. Record `git rev-parse HEAD` when reviewing or running Forge; the source version marker alone does not identify a published release. The repository does not yet include a `LICENSE` file; intended reuse terms await owner selection. See [contribution and maintenance guidance](CONTRIBUTING.md).
 
 ## Reference
 
