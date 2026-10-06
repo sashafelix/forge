@@ -1,4 +1,4 @@
-# AGENTS.md — Local RGR v2
+# AGENTS.md — Forge (Local RGR v2)
 
 Canonical portable role and stage model.
 

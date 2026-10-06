@@ -1,4 +1,4 @@
-name: Validate local RGR contracts
+name: Validate Forge contracts
 
 on:
   pull_request:

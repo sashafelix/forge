@@ -1,6 +1,6 @@
 # Operator model configuration
 
-The desktop companion can edit multiple model providers and named profiles, discover model IDs, test synthetic capabilities and export a secret-free `runtime-configuration.json`. This is an optional configuration handoff. It preserves the pipeline's nine stages, role authority, risk rules, independent verification, checkpoints and publication boundaries.
+Forge Console can edit multiple model providers and named profiles, discover model IDs, test synthetic capabilities and export a secret-free `runtime-configuration.json`. This is an optional configuration handoff. It preserves the pipeline's nine stages, role authority, risk rules, independent verification, checkpoints and publication boundaries.
 
 ## Validate an export
 

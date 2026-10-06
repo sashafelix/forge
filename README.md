@@ -1,8 +1,10 @@
-# Agent Dev Pipeline — Local RGR v2
+# Forge
+
+**The governed AI development pipeline.**
 
 An **evidence-first, auditable software-delivery protocol for AI coding agents**.
 
-Rather than giving one agent a broad prompt and trusting the result, Local RGR turns a change request into a governed sequence of specialised stages with explicit roles, bounded authority, machine-valid evidence and independent verification.
+Rather than giving one agent a broad prompt and trusting the result, Forge turns a change request into a governed sequence of specialised stages with explicit roles, bounded authority, machine-valid evidence and independent verification.
 
 ```text
 PREPARE → BRAINSTORM → PLAN → ANALYZE → RED → GREEN → REFACTOR → VERIFY → CONVERGE
@@ -10,13 +12,15 @@ PREPARE → BRAINSTORM → PLAN → ANALYZE → RED → GREEN → REFACTOR → V
 
 Version marker: `2.3.0`. Changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.md), including the optional operator tools and model-configuration handoff, are present on the current branch but are not a new tagged release.
 
-Optional [project setup and review tools](docs/agent/operator-tools.md) provide five-question project notes, locked-plan checks and spec/code/docs reconciliation. The [desktop companion](https://github.com/sashafelix/agent-pipeline-ui) can prepare project and [model configuration](docs/agent/runtime-configuration.md); execution and governance remain in this pipeline.
+Optional [project setup and review tools](docs/agent/operator-tools.md) provide five-question project notes, locked-plan checks and spec/code/docs reconciliation. The [Forge Console](https://github.com/sashafelix/forge-console) can prepare project and [model configuration](docs/agent/runtime-configuration.md); execution and governance remain in this pipeline.
+
+Forge is the product name; **Local RGR** is its versioned delivery protocol. The existing `ai-pipeline-*` agent names, `rgr-software` pack ID, schema IDs and evidence formats remain stable for compatibility. **Forge Console** is the optional desktop configuration companion.
 
 ## Why this exists
 
 AI coding agents are very capable at implementation, but reliable software delivery needs more than code generation. The hard problems are controlling scope, preserving intent, separating implementation from verification, proving what actually ran and making failures recoverable without silently rewriting history.
 
-Local RGR treats those concerns as part of the protocol rather than relying on prompt discipline alone.
+Forge treats those concerns as part of the protocol rather than relying on prompt discipline alone.
 
 The result is a repository-local workflow designed to answer:
 
@@ -85,7 +89,7 @@ The repository currently ships Claude Code agent definitions under `.claude/agen
 | --- | --- | --- |
 | Claude Code agent definitions | Nine-stage local adapter | Requires an installed, authenticated Claude Code environment and the required local tools |
 | Runtime routing resolver | Target selection and capability validation | Selects declared targets; does not prove provider readiness or execute them |
-| UI model configuration | Discovery, synthetic probes, profiles and reviewed JSON exports | Configuration/test only |
+| Forge Console model configuration | Discovery, synthetic probes, profiles and reviewed JSON exports | Configuration/test only |
 | Optional runtime-configuration preflight | Schema, provenance, role/capability and freshness checks | Reports `execution_authority: false`; does not change live routing |
 | Governed HTTP execution loop | Not installed | An exported profile or successful probe cannot run the pipeline through HTTP |
 

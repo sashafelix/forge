@@ -1,6 +1,6 @@
 # Project setup and review tools
 
-These optional tools improve preparation and inspection around Local RGR 2.3. They do not introduce a stage, execute configured commands, change locked intent or issue an approval. Existing run artifacts and pack contracts remain compatible.
+These optional tools improve preparation and inspection around Forge’s Local RGR 2.3 protocol. They do not introduce a stage, execute configured commands, change locked intent or issue an approval. Existing run artifacts and pack contracts remain compatible.
 
 ## Guided project notes
 
