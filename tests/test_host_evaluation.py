@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import tempfile
+import json
 import unittest
 from host_fixtures import create_engine, finish, ControlledSandbox
 from forge_host.engine import Engine
@@ -51,6 +52,10 @@ class EvaluationTests(unittest.TestCase):
                 receipt=engine.store.receipts()[-1]
                 self.assertEqual(receipt['purpose'], 'regrade-positive')
                 self.assertEqual((engine.bundle / receipt['output_ref']).read_text(), 'collection failed\n')
+                projection=json.loads((engine.bundle / 'host-receipts.json').read_text())
+                self.assertEqual(projection['receipts'], engine.store.receipts())
+                self.assertEqual((engine.bundle / 'events.jsonl').read_bytes(), engine.store.event_bytes())
+                self.assertTrue(engine.verify_receipts()['locally_authenticated'])
 
     def test_paired_results_include_failures_and_uncertainty(self):
         with tempfile.TemporaryDirectory() as temporary:

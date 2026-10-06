@@ -15,35 +15,42 @@ def grade(engine):
         state = engine.store.state()
         if state['status'] != 'completed' or not engine.verify_receipts()['locally_authenticated']:
             raise ValueError('Grade requires a completed run with reconciled local host receipts')
-        broker = Broker(engine.store, engine.workspace, engine.bundle, 'quality_gate', 'independent_verifier',
-                        uuid.uuid4().hex, engine.sandbox, [], state['frozen_tests'])
-        command = state['policy'].get('verify_command', state['policy']['test_command'])
-        broker.purpose = 'regrade-positive'
-        engine.fresh_verify(broker, command)
-        positive = broker.commands[-1]
-        if positive.get('test_error') or not positive['tests'] or positive['exit_code'] or any(c['outcome'] != 'passed' for c in positive['tests']['cases']):
-            raise ValueError('Fresh patch regrade failed or skipped tests')
-        control = engine.store.root / 'negative-control'
-        if control.exists(): shutil.rmtree(control)
-        shutil.copytree(engine.store.root / 'base', control)
-        for name in state['frozen_tests']:
-            from .store import atomic
-            atomic(contained(control, name), read_bytes(engine.workspace, name))
-        engine.sandbox.permissions(control)
-        broker.workspace = control
-        broker.purpose = 'regrade-negative-control'
-        broker.command(command)
-        negative = broker.commands[-1]
-        if negative.get('test_error') or not negative['tests'] or not negative['exit_code'] or not negative['tests']['failed'] or negative['tests']['errors']:
-            raise ValueError('Negative control did not fail a regression assertion on the unpatched base')
-        result = {'schema_version': '1.0', 'run_id': state['id'], 'base_revision': state['base_revision'],
-                  'status': 'tests_passed_with_negative_control', 'positive_receipt': positive['id'],
-                  'negative_receipt': negative['id'], 'model_review_repeated': False,
-                  'limits': ['Tests and their semantic sufficiency still require independent review.']}
-        write_json(engine.bundle, f"evidence/grade-{broker.invocation}.json", result)
-        engine.record_invocation(broker, f"evidence/grade-{broker.invocation}.json", result, 'host-regrade')
-        engine.project()
-        return result
+        try:
+            return grade_completed(engine, state)
+        finally:
+            # Failed regrades also append command receipts and events.
+            engine.project()
+
+
+def grade_completed(engine, state):
+    broker = Broker(engine.store, engine.workspace, engine.bundle, 'quality_gate', 'independent_verifier',
+                    uuid.uuid4().hex, engine.sandbox, [], state['frozen_tests'])
+    command = state['policy'].get('verify_command', state['policy']['test_command'])
+    broker.purpose = 'regrade-positive'
+    engine.fresh_verify(broker, command)
+    positive = broker.commands[-1]
+    if positive.get('test_error') or not positive['tests'] or positive['exit_code'] or any(c['outcome'] != 'passed' for c in positive['tests']['cases']):
+        raise ValueError('Fresh patch regrade failed or skipped tests')
+    control = engine.store.root / 'negative-control'
+    if control.exists(): shutil.rmtree(control)
+    shutil.copytree(engine.store.root / 'base', control)
+    for name in state['frozen_tests']:
+        from .store import atomic
+        atomic(contained(control, name), read_bytes(engine.workspace, name))
+    engine.sandbox.permissions(control)
+    broker.workspace = control
+    broker.purpose = 'regrade-negative-control'
+    broker.command(command)
+    negative = broker.commands[-1]
+    if negative.get('test_error') or not negative['tests'] or not negative['exit_code'] or not negative['tests']['failed'] or negative['tests']['errors']:
+        raise ValueError('Negative control did not fail a regression assertion on the unpatched base')
+    result = {'schema_version': '1.0', 'run_id': state['id'], 'base_revision': state['base_revision'],
+              'status': 'tests_passed_with_negative_control', 'positive_receipt': positive['id'],
+              'negative_receipt': negative['id'], 'model_review_repeated': False,
+              'limits': ['Tests and their semantic sufficiency still require independent review.']}
+    write_json(engine.bundle, f"evidence/grade-{broker.invocation}.json", result)
+    engine.record_invocation(broker, f"evidence/grade-{broker.invocation}.json", result, 'host-regrade')
+    return result
 
 
 def wilson(passed, total):
