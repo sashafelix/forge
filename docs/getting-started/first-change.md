@@ -5,6 +5,10 @@ Forge orchestrator through a compatible execution host. Setup and structural
 examples are exercised in CI. The model-backed part requires your installed,
 authenticated host; no completed provider-backed transcript is bundled.
 
+This recipe uses the Claude Code adapter. For operator-selected HTTP models,
+controlled Docker commands and host-managed recovery, use the separate
+[governed host walkthrough](../governed-host.md).
+
 ## 1. Create the baseline
 
 From the Forge checkout:

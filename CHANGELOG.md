@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added an opt-in governed host with four model-neutral HTTP tool protocols, independent operator inputs, role/plan-scoped writes, frozen RED tests and isolated Docker commands.
+- Added SQLite state/event cursors, locally authenticated command/invocation receipts, input/approval binding, fresh-workspace verification, explicit interruption recovery and bounded suffix remediation.
+- Rejected false passes from missing/empty logs, empty suites, nonzero passing-stage commands and inconsistent histories; preserved unvalidated proposals and failed evidence.
+- Added exact-revision source maps, patch handoff, fresh positive/negative-control grading and paired repeated-run evaluation with failures and uncertainty intervals.
+- Added host/protocol/security/recovery conformance tests, real Docker CI qualification and a complete host/operator walkthrough.
+
 - Added model-neutral canonical role prompts, checked Claude Code adapter copies and an operator-routing example without a required model/provider.
 - Added reviewer, quickstart, first-change, evidence, enforcement and recovery guides; documented current runtime and multi-attempt validation limits.
 - Corrected the five-round capability declaration, PLAN lane-resolution diagram and Forge Console link.

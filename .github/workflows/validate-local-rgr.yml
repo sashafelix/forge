@@ -57,6 +57,13 @@ jobs:
         run: python scripts/validate-runtime-configuration.py tests/fixtures/runtime-configuration.json
       - name: Test routing and optional operator tools
         run: python -m unittest discover -s tests -v
+      - name: Compile governed host
+        run: python -m compileall -q scripts/forge_host scripts/forge-host.py scripts/close-run.py
+      - name: Qualify real Docker commands and full host run
+        run: |
+          docker pull python:3.12-slim
+          export FORGE_DOCKER_IMAGE=$(docker image inspect python:3.12-slim --format '{{.Id}}')
+          python tests/docker_conformance.py -v
       - name: Create and test the disposable onboarding repository
         run: python examples/first-change/create_demo.py
       - name: Validate governance contracts and evaluation corpus

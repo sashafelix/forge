@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Any
 
 from schema_validation import validate_instance
+from evidence_validation import validate_attempts, validate_evidence
+from pipeline_support.common import read_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENT_DIR = ROOT / "docs" / "agent"
@@ -18,7 +20,7 @@ STAGES = ["prepare", "brainstorm", "plan", "analyze", "red_test", "green_code", 
 
 def load_json(path: Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(read_bytes(path.parent, path.name))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"{path}: invalid JSON: {exc}") from exc
 
@@ -43,7 +45,7 @@ def expected_specialists(profile: dict[str, Any], facts: dict[str, Any]) -> set[
 
 def read_events(path: Path) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
-    for line_no, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for line_no, raw in enumerate(read_bytes(path.parent, path.name).decode('utf-8').splitlines(), 1):
         if not raw.strip():
             continue
         try:
@@ -65,6 +67,7 @@ def validate(run_dir: Path) -> list[str]:
     resolution = load_json(resolution_path)
     resolution_schema = load_json(SCHEMA_DIR / "profile-resolution.schema.json")
     errors.extend(f"{resolution_path}: {error}" for error in validate_instance(resolution, resolution_schema))
+    if errors:return errors
     profiles_doc = load_json(AGENT_DIR / "workflow-profiles.json")
     profiles = {profile["id"]: profile for profile in profiles_doc["profiles"]}
     roles_doc = load_json(AGENT_DIR / "role-contracts.json")
@@ -102,6 +105,7 @@ def validate(run_dir: Path) -> list[str]:
                 continue
             review = load_json(path)
             errors.extend(f"{path}: {error}" for error in validate_instance(review, specialist_schema))
+            if errors:continue
             if review.get("role") != specialist:
                 errors.append(f"{path}: role must be {specialist}")
             if review.get("status") == "FAIL":
@@ -118,6 +122,7 @@ def validate(run_dir: Path) -> list[str]:
             continue
         context = load_json(path)
         errors.extend(f"{path}: {error}" for error in validate_instance(context, context_schema))
+        if errors:continue
         limits = context.get("budget", {})
         if limits.get("max_files", 0) > budget["max_context_files"]:
             errors.append(f"{path}: max_files exceeds {selected} profile")
@@ -138,6 +143,8 @@ def validate(run_dir: Path) -> list[str]:
     if events_path.is_file():
         events = read_events(events_path)
         for line_no, event in enumerate(events, 1):
+            if type(event.get('attempt')) is not int or event['attempt'] > budget['max_convergence_attempts']:
+                errors.append(f'events.jsonl:{line_no}: attempt exceeds selected profile budget')
             actor_role = event.get("actor_role")
             if actor_role not in role_ids and actor_role not in {"planner", "operator"}:
                 errors.append(f"events.jsonl:{line_no}: unknown actor_role {actor_role!r}")
@@ -153,6 +160,9 @@ def validate(run_dir: Path) -> list[str]:
         if checkpoint not in accepted_checkpoints:
             errors.append(f"events.jsonl: missing accepted operator checkpoint {checkpoint!r}")
 
+    errors.extend(validate_evidence(run_dir))
+    if events and convergence_path.is_file():
+        errors.extend(validate_attempts(events, convergence.get('attempt', 1)))
     return errors
 
 
@@ -162,7 +172,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         errors = validate(args.run_dir)
-    except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+    except (ValueError, OSError, KeyError, TypeError, UnicodeError, RecursionError) as exc:
         errors = [str(exc)]
     if errors:
         for error in errors:
