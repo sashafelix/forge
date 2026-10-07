@@ -5,7 +5,8 @@ import json
 import os
 from pathlib import Path
 import uuid
-from pipeline_support.common import contained, read_bytes
+from pipeline_support.common import ROOT, contained, read_bytes
+from agent_library import guidance_paths
 from .context import files
 from .policy import within
 from .store import atomic, now, digest
@@ -47,16 +48,20 @@ class Broker:
         if not isinstance(action,dict) or set(action)-{'kind','path','text','command','document'}:raise ValueError('Unknown broker action fields')
         kind=action.get('kind')
         if kind=='list':return {'files':[n for n in files(self.workspace) if not credential_path(n)][:self.store.state()['budgets']['max_context_files']]}
-        if kind in ('read','search'):
+        if kind in ('read','search','guidance'):
             name=action.get('path','')
             if not isinstance(name,str) or credential_path(name):raise ValueError('Credential file reads are denied')
-            receipt = next((r for r in self.store.receipts() if r['kind']=='command' and r['output_ref']==name), None)
-            data=read_bytes(self.bundle if receipt else self.workspace,name)
+            receipt = None if kind=='guidance' else next((r for r in self.store.receipts() if r['kind']=='command' and r['output_ref']==name), None)
+            if kind=='guidance':
+                if name not in guidance_paths():raise ValueError('Read only a canonical agent, skill, catalog or convention')
+                data=read_bytes(ROOT,name);read_name='forge://'+name;read_kind='convention'
+            else:
+                data=read_bytes(self.bundle if receipt else self.workspace,name);read_name=name;read_kind='test_output' if receipt else 'source'
             if receipt and hashlib.sha256(data).hexdigest()!=receipt['output_sha256']:
                 raise PolicyViolation('Command evidence changed outside the host')
             budget=self.store.state()['budgets']
-            if name not in self.reads and (len(self.reads)>=budget['max_context_files'] or sum(r['bytes'] for r in self.reads.values())+len(data)>budget['max_context_bytes']):raise ValueError('Stage context budget exhausted')
-            self.reads[name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'kind':'test_output' if receipt else 'source'};text=data.decode('utf-8')
+            if read_name not in self.reads and (len(self.reads)>=budget['max_context_files'] or sum(r['bytes'] for r in self.reads.values())+len(data)>budget['max_context_bytes']):raise ValueError('Stage context budget exhausted')
+            self.reads[read_name]={'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'kind':read_kind};text=data.decode('utf-8')
             for provider in self.store.state()['configuration']['providers']:
                 ref=provider['auth'].get('credentialRef')
                 secret=os.environ.get(ref[4:],'') if isinstance(ref,str) and ref.startswith('env:') else ''

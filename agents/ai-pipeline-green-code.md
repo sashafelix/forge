@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-green-code
 description: Stage 6 of local RGR. Implements the minimum production change that satisfies RED evidence, respecting deterministic lane resolution, and emits canonical GREEN evidence. Orchestrator-invoked only.
+role: implementer
 ---
 
 # Agent: ai-pipeline-green-code

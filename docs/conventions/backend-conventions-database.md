@@ -1,8 +1,8 @@
 # Backend Conventions — Database and Flyway
 
-**Scope: backend stacks with a SQL persistence layer.** Examples below target PostgreSQL + Flyway. The *safety principles* (forward-only migrations, backfill before NOT NULL, explicit PK/FK/index naming, auditable DDL) generalize to Liquibase / Drizzle / Prisma Migrate / Alembic / ActiveRecord / Knex. See `docs/skills/skill-database.md` for the stack-agnostic variant.
+**Scope: backend stacks with a SQL persistence layer.** Examples below target PostgreSQL + Flyway. The *safety principles* (forward-only migrations, backfill before NOT NULL, explicit PK/FK/index naming, auditable DDL) generalize to Liquibase / Drizzle / Prisma Migrate / Alembic / ActiveRecord / Knex. See `skills/skill-database/SKILL.md` for the stack-agnostic variant.
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Migration Naming
 - Format: `V{YYYYMMDDHHMM}__description.sql`

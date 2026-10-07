@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-refactor
 description: Stage 7 of local RGR. Improves maintainability without changing verified behaviour and emits a canonical REFACTOR stage result. Orchestrator-invoked only.
+role: refactorer
 ---
 
 # Agent: ai-pipeline-refactor

@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-rgr-orchestrator
 description: Executes the portable rgr-software v2 pack locally with governed profiles, trusted project facts, deterministic implementation lanes, evidence and export.
+role: orchestrator
 ---
 
 # Agent: ai-pipeline-rgr-orchestrator

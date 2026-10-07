@@ -35,11 +35,13 @@ jobs:
             scripts/export-run-bundle.py \
             scripts/verify-export-bundle.py \
             scripts/generate-contract-fixture.py \
-            scripts/sync-agent-adapters.py \
+            scripts/validate-agent-library.py \
+            scripts/agent_library.py \
+            scripts/launch-claude.py \
             examples/inspect-evidence.py \
             examples/first-change/create_demo.py
-      - name: Check portable prompts and adapter copies
-        run: python scripts/sync-agent-adapters.py
+      - name: Validate canonical agents and skills
+        run: python scripts/validate-agent-library.py
       - name: Parse all published schemas
         run: |
           python - <<'PY'

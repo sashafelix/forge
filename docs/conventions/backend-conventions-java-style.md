@@ -2,7 +2,7 @@
 
 **Scope: Java/Spring backends only.** Invoke when `run-context.md > stack` is `backend-java`. The *Code Simplicity Rules* at the bottom of this file (small functions, Rule of Three, no dead code, don't-mock-what-you-don't-own) are general review guidance; everything else in this file is Java-specific.
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Class and Dependency Style
 - Constructor injection only (`@RequiredArgsConstructor`).

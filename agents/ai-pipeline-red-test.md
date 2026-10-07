@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-red-test
 description: Stage 5 of local RGR. Encodes every success criterion as intentionally failing executable evidence and emits a canonical RED stage result. Orchestrator-invoked only.
+role: test_author
 ---
 
 # Agent: ai-pipeline-red-test

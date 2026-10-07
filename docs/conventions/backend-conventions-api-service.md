@@ -2,7 +2,7 @@
 
 **Scope: backend stacks** (invoke when `run-context.md > stack` is `backend-*`). Examples below target Java + Spring; translate idioms to Node/Python/Go/.NET as needed. The *principles* — thin controllers, business logic in services, DTO separation, explicit error model, sanitized logs, documented contracts — apply to any backend.
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Controllers
 

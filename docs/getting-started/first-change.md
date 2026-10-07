@@ -46,7 +46,7 @@ or your organisation's approved distribution, then confirm:
 ```bash
 claude --version
 claude auth status
-python3 scripts/sync-agent-adapters.py
+python3 scripts/validate-agent-library.py
 ```
 
 If authentication is missing, use `claude auth login`. Model selection is your
@@ -63,7 +63,7 @@ cannot satisfy a required boundary, stop the pilot and record the limitation.
 Use `target_repo` and `input_dir` from `demo.json`:
 
 ```bash
-claude --agent ai-pipeline-rgr-orchestrator \
+python3 scripts/launch-claude.py -- \
   --add-dir "/absolute/path/from/demo/target" "/absolute/path/from/demo/inputs"
 ```
 

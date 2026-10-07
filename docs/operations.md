@@ -10,7 +10,7 @@ version. Preserve operator input bytes and the exact baseline revision.
 | Symptom | Check and next action |
 | --- | --- |
 | Pack/governance check fails before setup | Compare the checkout, schemas, contract paths and declared versions. Fix the contract issue outside the run; rerun preflight. |
-| Adapter-copy check fails | Edit canonical `agents/` prompts, run `sync-agent-adapters.py --write`, then check again. |
+| Library validation fails | Check canonical agent/skill names, role bindings and references with `validate-agent-library.py`; remove obsolete local prompt mirrors. |
 | No available compatible runtime | Check the operator-selected route and host-established readiness. Install/register a compatible host or stop; setting an endpoint alone does not install an adapter. |
 | Available target lacks capabilities | The resolver deliberately blocks. Correct the trusted registration/routing after review; do not bypass the required capability or silently skip that target. |
 | CLI missing or unauthenticated | Check the host's installation, `claude --version` and `claude auth status` for the documented adapter; use its official authentication flow. |

@@ -8,7 +8,7 @@ Forge's core is model- and provider-neutral: stage order, roles, evidence, risk 
 | --- | --- | --- |
 | Delivery protocol | `packs/rgr-software-v2/`, `docs/agent/` | Stage/role authority, evidence and deterministic validation |
 | Canonical role instructions | `agents/` | Portable Markdown prompts with name/description metadata |
-| Execution adapter | Operator-reviewed coding host; `.claude/agents/` is one supplied layout | Model calls, tool loop, permissions, actual invocation identities and outputs |
+| Execution adapter | Operator-reviewed coding host; `scripts/launch-claude.py` is one supplied adapter | Model calls, tool loop, permissions, actual invocation identities and outputs |
 | Model/provider | Host configuration or environment references | Reasoning, code/test generation and structured outputs within the assigned role |
 
 No model ID is embedded in the portable prompts or example routing. The existing `frontier-default` Claude Code target remains as a compatibility profile; it is not a requirement of the protocol. Current route categories are declarations, not installed SDKs. A local model server needs an execution host for filesystem tools, commands and role isolation.
@@ -48,4 +48,4 @@ Acceptance should demonstrate a real small-profile run plus negative tests for f
 
 ## Claude Code as one adapter
 
-Launch from the Forge checkout using `claude --agent ai-pipeline-rgr-orchestrator`, with explicit access to the target and operator inputs. This uses the orchestrator as the main session and leaves stage delegation to it. The [first-change guide](getting-started/first-change.md) has the complete recipe. Official references: [CLI](https://code.claude.com/docs/en/cli-reference) and [subagents](https://code.claude.com/docs/en/sub-agents), checked on 2026-10-06. The CLI launch syntax was checked against those docs; no authenticated model run is bundled or claimed.
+Launch from the Forge checkout using `python3 scripts/launch-claude.py --`, with explicit access to the target and operator inputs. The launcher reads `agents/`, passes small discovery entries using `--agents` that load the canonical prompt on invocation, and selects the orchestrator as the main session. Agents read applicable skills from `skills/`; no prompt copies are committed. The [first-change guide](getting-started/first-change.md) has the complete recipe. Official references: [CLI](https://code.claude.com/docs/en/cli-reference) and [subagents](https://code.claude.com/docs/en/sub-agents), checked on 2026-10-07. The CLI launch syntax was checked against those docs; no authenticated model run is bundled or claimed.

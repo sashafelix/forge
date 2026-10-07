@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-brainstorm
 description: Stage 2 BRAINSTORM. Produces canonical, observable success criteria after PREPARE. Orchestrator-invoked only.
+role: specifier
 ---
 
 # Agent: ai-pipeline-brainstorm

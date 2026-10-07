@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Centralized all core/specialist agent instructions in `agents/` and reusable skills in `skills/<name>/SKILL.md`, indexed by `AGENTS.md`. Removed committed Claude prompt mirrors; the launcher now injects canonical definitions at runtime.
+- Added canonical library/reference validation and bounded, recorded skill/convention reads in the governed host.
+
 - Added an opt-in governed host with four model-neutral HTTP tool protocols, independent operator inputs, role/plan-scoped writes, frozen RED tests and isolated Docker commands.
 - Added SQLite state/event cursors, locally authenticated command/invocation receipts, input/approval binding, fresh-workspace verification, explicit interruption recovery and bounded suffix remediation.
 - Rejected false passes from missing/empty logs, empty suites, nonzero passing-stage commands and inconsistent histories; preserved unvalidated proposals and failed evidence.

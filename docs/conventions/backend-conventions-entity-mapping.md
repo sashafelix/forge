@@ -2,7 +2,7 @@
 
 **Scope: backend stacks with an ORM and DTO layer.** Examples below target Java + JPA + Lombok + MapStruct. The *principles* — audit fields on mutable entities, business-key equality, explicit fetch/cascade, DTO↔entity separation via a mapper — generalize to Node + TypeORM/Prisma, Python + SQLAlchemy/Django, Go + GORM, .NET + EF Core. Adapt idioms to the stack.
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Base Entity Pattern
 

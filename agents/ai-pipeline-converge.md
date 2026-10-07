@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-converge
 description: Stage 9 CONVERGE reviewer. Applies selected-profile attempt budgets and immutable remediation. Orchestrator-invoked only.
+role: convergence_reviewer
 ---
 
 # Agent: ai-pipeline-converge
