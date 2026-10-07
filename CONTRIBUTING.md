@@ -5,15 +5,15 @@ and evidence for the result. Read [AGENTS.md](AGENTS.md), the
 [enforcement map](docs/enforcement.md) and [SECURITY.md](SECURITY.md) before
 changing delivery contracts or authority boundaries.
 
-Edit portable role instructions in `agents/`, then refresh compatibility
-copies with `python3 scripts/sync-agent-adapters.py --write`. Do not edit the
-Claude Code copies independently. Preserve existing machine identifiers and
+Edit role instructions in `agents/` and reusable skills in `skills/<name>/SKILL.md`.
+`AGENTS.md` and the catalogs point to those definitions. Runtime adapters load them
+at launch; do not commit runtime prompt mirrors. Preserve machine identifiers and
 schema IDs unless a versioned compatibility change is intentional.
 
 Run from the repository root:
 
 ```bash
-python3 scripts/sync-agent-adapters.py
+python3 scripts/validate-agent-library.py
 python3 scripts/validate-pack.py packs/rgr-software-v2/pack.json
 python3 scripts/validate-governance.py
 python3 scripts/evaluate-corpus.py

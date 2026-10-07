@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-prepare
 description: Stage 1 PREPARE repository analyst. Read-only, profile-bounded and orchestrator-invoked only.
+role: repository_analyst
 ---
 
 # Agent: ai-pipeline-prepare

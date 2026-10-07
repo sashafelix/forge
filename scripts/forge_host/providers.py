@@ -6,7 +6,7 @@ from urllib import request, error
 from .store import canonical
 
 ACTION_SCHEMA={'type':'object','additionalProperties':False,'required':['kind'],'properties':{
-    'kind':{'type':'string','enum':['list','read','search','write','command','submit']},
+    'kind':{'type':'string','enum':['list','read','search','guidance','write','command','submit']},
     'path':{'type':'string'},'text':{'type':'string'},'command':{'type':'string'},'document':{'type':'object'}}}
 TOOL={'name':'forge_action','description':'Request a bounded host action or submit the current stage artifact. This never advances the stage or grants permission.','parameters':ACTION_SCHEMA}
 

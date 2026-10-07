@@ -14,7 +14,7 @@ cd forge
 git rev-parse HEAD
 python3 --version
 git --version
-python3 scripts/sync-agent-adapters.py
+python3 scripts/validate-agent-library.py
 python3 scripts/validate-pack.py packs/rgr-software-v2/pack.json
 python3 scripts/validate-governance.py
 python3 scripts/evaluate-corpus.py

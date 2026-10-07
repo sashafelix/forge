@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-analyze
 description: Stage 4 ANALYZE consistency analyst with governed read-only specialist reviews. Orchestrator-invoked only.
+role: consistency_analyst
 ---
 
 # Agent: ai-pipeline-analyze

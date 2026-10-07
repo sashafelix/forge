@@ -6,7 +6,7 @@
 - Logging: Logback → pino/winston (Node), structlog (Python), zap/zerolog (Go), Serilog (.NET)
 - Profiles: Spring profiles → `NODE_ENV`/dotenv, `APP_ENV`, Go build tags, ASP.NET environments
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Contract Guard
 - Validate API and schema compatibility.

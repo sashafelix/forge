@@ -8,7 +8,7 @@ Examples below target JUnit 5 + Spring's `@WebMvcTest` / `@SpringBootTest` / `@W
 - Go `testing`: table-driven tests, `httptest`
 - Playwright / Cypress: e2e over authenticated flows
 
-Applies to: relevant stage agents through the matching `docs/skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
+Applies to: relevant stage agents through the matching `skills/` helpers. Helpers inherit the caller’s role and write limits; verification helpers inspect and report only.
 
 ## Naming
 - Test method format: `method_condition_expectedBehavior`.

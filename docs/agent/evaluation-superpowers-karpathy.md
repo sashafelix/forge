@@ -19,7 +19,7 @@ The agent architecture is **well-structured** with clear stage ownership, determ
 | Simplicity and pattern reuse | Applicable Java-style conventions and cleanup helper |
 | Independent verification and hard failures | VERIFY contract, `quality-gates.schema.json`, selected profile and projection template |
 | Blocking uncertainty | BRAINSTORM/ANALYZE contracts and decision-log template |
-| Stage order and helper authority | `AGENTS.md`, `docs/skills/README.md` and role contracts |
+| Stage order and helper authority | `AGENTS.md`, `skills/README.md` and role contracts |
 
 Extensions added beyond the original review:
 - **Brainstorm stage**: declarative SCs now gate planning and RED.
@@ -70,7 +70,7 @@ Extensions added beyond the original review:
 
 ### 3.1 Add "Comprehension Protocol" to all stage agents (HIGH)
 
-Add to `.claude/agents/ai-pipeline-green-code.md`, `.claude/agents/ai-pipeline-refactor.md`, and `.claude/agents/ai-pipeline-red-test.md`:
+Add to `agents/ai-pipeline-green-code.md`, `agents/ai-pipeline-refactor.md`, and `agents/ai-pipeline-red-test.md`:
 
 ```markdown
 ## Comprehension Protocol (before writing any code)
@@ -83,7 +83,7 @@ Add to `.claude/agents/ai-pipeline-green-code.md`, `.claude/agents/ai-pipeline-r
 
 ### 3.2 Add "Incremental Verification" to GREEN and REFACTOR agents (HIGH)
 
-Add to `.claude/agents/ai-pipeline-green-code.md` and `.claude/agents/ai-pipeline-refactor.md`:
+Add to `agents/ai-pipeline-green-code.md` and `agents/ai-pipeline-refactor.md`:
 
 ```markdown
 ## Incremental Verification
@@ -125,7 +125,7 @@ Add to `backend-conventions-java-style.md`:
 
 ### 3.6 Add to quality-gate mandatory checklist (MED)
 
-Add to `.claude/agents/ai-pipeline-quality-gate.md` Mandatory Test Evidence Matrix:
+Add to `agents/ai-pipeline-quality-gate.md` Mandatory Test Evidence Matrix:
 
 ```markdown
 ## Code Quality Checks
@@ -183,15 +183,15 @@ Systematically read and understand existing code before making changes.
 | File | Change |
 |------|--------|
 | `CLAUDE.md` | Add "Search before creating" non-negotiable |
-| `.claude/agents/ai-pipeline-red-test.md` | Add Comprehension Protocol + Self-Check |
-| `.claude/agents/ai-pipeline-green-code.md` | Add Comprehension Protocol + Incremental Verification + Self-Check |
-| `.claude/agents/ai-pipeline-refactor.md` | Add Comprehension Protocol + Incremental Verification + Self-Check |
-| `.claude/agents/ai-pipeline-quality-gate.md` | Add Code Quality Checks to mandatory checklist |
+| `agents/ai-pipeline-red-test.md` | Add Comprehension Protocol + Self-Check |
+| `agents/ai-pipeline-green-code.md` | Add Comprehension Protocol + Incremental Verification + Self-Check |
+| `agents/ai-pipeline-refactor.md` | Add Comprehension Protocol + Incremental Verification + Self-Check |
+| `agents/ai-pipeline-quality-gate.md` | Add Code Quality Checks to mandatory checklist |
 | `docs/conventions/backend-conventions-java-style.md` | Add Code Simplicity Rules section |
 | `docs/conventions/backend-conventions-rgr.md` | Add Uncertainty Protocol section |
 | `docs/conventions/backend-conventions-testing-style.md` | Add "Don't mock what you don't own" rule |
 | `AGENTS.md` | Add `skill-codebase-comprehension` to skill catalog, add Design Principle #7 |
-| NEW: `docs/skills/skill-codebase-comprehension.md` | New skill definition |
+| NEW: `skills/skill-codebase-comprehension/SKILL.md` | New skill definition |
 
 ---
 

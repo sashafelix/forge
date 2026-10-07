@@ -1,6 +1,7 @@
 ---
 name: ai-pipeline-quality-gate
 description: Stage 8 of local RGR. Independently verifies canonical execution evidence and emits PASS, FAIL, or WARN. Orchestrator-invoked only.
+role: independent_verifier
 ---
 
 # Agent: ai-pipeline-quality-gate

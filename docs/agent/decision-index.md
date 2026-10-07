@@ -7,4 +7,4 @@ Compact navigation index of the latest closed run for each story. Updated by the
 | Story ID | Date | Verdict | Summary | Tags | Link |
 | --- | --- | --- | --- | --- | --- |
 
-See `docs/skills/skill-decision-index.md` for the row contract, tag vocabulary, and idempotency rules.
+See `skills/skill-decision-index/SKILL.md` for the row contract, tag vocabulary, and idempotency rules.
