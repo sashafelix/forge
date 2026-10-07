@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Simplified project status and handover guidance; kept source snapshots focused on reproducibility.
 - Added a create-only governed pilot helper: disposable target, passing baseline, all four draft operator files, exact binding hashes and a capability review worksheet. Registrations remain unavailable until independently qualified.
 - Added exact source-pair snapshots and run reports with observed test receipts, evidence hashes, timing and clearly labelled operator notes, including failed/cancelled attempts.
 - Added a platform/runtime decision table and complete pilot/evaluation handover guides. Corrected stale adapter-copy and configuration-only wording.

@@ -40,7 +40,7 @@ def evaluation_snapshot(console: Path) -> dict:
             'host_interface': '1.0', 'runtime_configuration_schema': '1.0',
             'release_status': 'source_snapshot', 'qualification': 'not_established_by_snapshot',
             'requirements': {'python': '3.11+', 'console_node': '22.12+', 'sandbox': 'Linux Docker'},
-            'limits': ['Version markers do not establish a tagged release or a license.',
+            'limits': ['Version markers do not establish a tagged release.',
                        'Run both repositories\' checks and a live pilot on these exact revisions.']}
 
 
