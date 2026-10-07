@@ -1,8 +1,0 @@
-# Deprecated projection
-#
-# The canonical evaluation corpus moved to `docs/agent/evaluation-corpus.json`
-# in local RGR v1.2. JSON is authoritative and validated against
-# `docs/agent/schemas/evaluation-corpus.schema.json`.
-#
-# This file remains only to prevent old links from failing. Do not add fixtures here.
-canonical: docs/agent/evaluation-corpus.json

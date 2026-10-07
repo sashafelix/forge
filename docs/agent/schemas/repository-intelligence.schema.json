@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://rigorroute.com/schemas/agent-dev-pipeline/repository-intelligence.v1.json",
+  "$id": "https://agent-dev-pipeline.local/schemas/repository-intelligence.v1.json",
   "title": "RepositoryIntelligence",
   "type": "object",
   "additionalProperties": false,

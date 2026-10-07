@@ -122,7 +122,7 @@ def verify(bundle_path: Path, pack_path: Path) -> list[str]:
         errors.append("export-manifest.json: contains_secrets must be false")
 
     pack = load_json(pack_path)
-    import_path = ROOT / pack["compatibility"]["rigor_route_import_contract"]
+    import_path = ROOT / pack["compatibility"]["evidence_import_contract"]
     import_contract = load_json(import_path)
     if manifest.get("pack_id") != pack.get("pack_id") or manifest.get("pack_version") != pack.get("pack_version"):
         errors.append("export manifest pack identity/version does not match selected pack")
@@ -130,11 +130,11 @@ def verify(bundle_path: Path, pack_path: Path) -> list[str]:
         errors.append("export manifest protocol_version does not match selected pack")
     expected_format = import_contract.get("accepted_bundle_format", "").split("/", 1)[-1]
     if manifest.get("bundle_format_version") != expected_format:
-        errors.append("export manifest bundle format is incompatible with Rigor Route import contract")
+        errors.append("export manifest bundle format is incompatible with evidence import contract")
     required = set(import_contract.get("required_artifacts", [])) - {"export-manifest.json"}
     required_missing = sorted(required - actual_evidence_paths)
     if required_missing:
-        errors.append(f"Rigor Route import-required artifacts missing: {required_missing}")
+        errors.append(f"Import-required artifacts missing: {required_missing}")
     required_flags = {
         entry.get("path")
         for entry in listed
@@ -143,7 +143,7 @@ def verify(bundle_path: Path, pack_path: Path) -> list[str]:
     if not required.issubset(required_flags):
         errors.append(f"manifest does not mark all import-required artifacts required: {sorted(required - required_flags)}")
     if import_contract.get("publication_mode") != "none":
-        errors.append("Rigor Route import contract unexpectedly grants publication authority")
+        errors.append("evidence import contract unexpectedly grants publication authority")
 
     validator_names = {
         item.get("name")

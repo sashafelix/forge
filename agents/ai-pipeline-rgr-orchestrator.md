@@ -122,9 +122,9 @@ python3 scripts/verify-export-bundle.py evidence.tar.gz
 
 Exports contain allowed run evidence, exclude separate story source/binary files and reject detected secret patterns. Review evidence text for embedded excerpts and undetected sensitive content before sharing. Export grants no publication authority.
 
-## Rigor Route boundary
+## Control plane boundary
 
-The import contract is packs/rgr-software-v2/rigor-route-import.json. Local roles, checkpoints and verdicts import as evidence. Rigor Route independently creates authentication, leases, credentials, approvals and publication decisions and may only impose stricter policy.
+The import contract is packs/rgr-software-v2/evidence-import.json. Local roles, checkpoints and verdicts import as evidence. A receiving platform independently establishes authentication, leases, credentials, approvals and publication decisions and may only impose stricter policy.
 
 ## Guardrails
 

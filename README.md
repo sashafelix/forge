@@ -2,9 +2,9 @@
 
 **The governed AI development pipeline.**
 
-An **evidence-first, auditable software-delivery protocol for AI coding agents**.
-
-Rather than giving one agent a broad prompt and trusting the result, Forge turns a change request into a governed sequence of specialised stages with explicit roles, bounded authority, machine-valid evidence and independent verification.
+Forge turns a software-change request into nine governed stages with explicit roles,
+bounded permissions, test evidence and independent verification. You receive a
+reviewable patch and run evidence; a human decides whether to publish it.
 
 ```text
 PREPARE → BRAINSTORM → PLAN → ANALYZE → RED → GREEN → REFACTOR → VERIFY → CONVERGE
@@ -14,7 +14,9 @@ Version marker: `2.3.0`. Changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.
 
 Optional [project setup and review tools](docs/agent/operator-tools.md) provide five-question project notes, locked-plan checks and spec/code/docs reconciliation. The [governed host](docs/governed-host.md) adds model-neutral HTTP execution, Docker commands, locally bound receipts and explicit recovery. [Forge Console](https://github.com/sashafelix/forge-console) can configure models and review or control registered host runs through its cockpit.
 
-Forge is the product name; **Local RGR** is its versioned delivery protocol. The existing `ai-pipeline-*` agent names, `rgr-software` pack ID, schema IDs and evidence formats remain stable for compatibility. **Forge Console** is the optional desktop companion and run cockpit.
+**Local RGR** is Forge's versioned delivery protocol; RGR means red, green, refactor.
+Existing agent names, pack IDs and run evidence formats retain their compatibility
+identifiers. **Forge Console** is the optional desktop companion and run cockpit.
 
 ## Start here
 
@@ -23,10 +25,29 @@ Forge is the product name; **Local RGR** is its versioned delivery protocol. The
 | Understand the design in ten minutes | [Reviewer guide](docs/reviewer-guide.md) |
 | Inspect evidence without a model account | [Quickstart](docs/getting-started/quickstart.md) and [synthetic evidence example](docs/getting-started/evidence-example.md) |
 | Try a supervised change in a disposable repository | [First change walkthrough](docs/getting-started/first-change.md) |
-| Execute with configured HTTP models and controlled commands | [Governed host walkthrough](docs/governed-host.md) |
+| Run a first governed change with HTTP models | [Guided pilot: generate the target and operator files](docs/getting-started/governed-pilot.md) |
+| Pin versions and prepare a team evaluation | [Evaluation handover](docs/evaluation.md) |
 | Use a different model or execution host | [Model and runtime portability](docs/model-portability.md) |
 | Assess the actual guardrails | [Enforcement map](docs/enforcement.md) |
 | Diagnose a failure or interruption | [Operations and recovery](docs/operations.md) |
+
+## Choose your execution path
+
+| What you have | Path | Platform and prerequisites |
+| --- | --- | --- |
+| No model account | Offline contract and evidence review | macOS, Linux or Windows; Python 3.11+ and Git |
+| A compatible local or cloud HTTP model | Governed host, optionally controlled from Console | macOS/Linux, or CLI inside WSL; Python, Git, Linux Docker and a reviewed test image |
+| Claude Code | Supervised prompt-based [first change](docs/getting-started/first-change.md) | Installed/authenticated CLI and Git; permissions supplied by that runtime |
+| Copilot or Claude Code subscription for ordinary agents | Console standalone workbench | Installed/authenticated CLI and Git; separate from the governed HTTP host |
+| An existing evidence bundle | Console inspection or Python validators | No model account; imports remain read-only |
+
+The native Console governed bridge supports macOS/Linux. On Windows, run the host
+inside WSL and inspect its evidence in Console. An HTTP API key, Claude Code login
+and Copilot subscription are different forms of access; they are not interchangeable.
+
+This is currently a source evaluation, not a published stable release. See
+[qualification and release status](docs/evaluation.md#current-qualification-and-release-status)
+for the live-run evidence and owner licence/release decisions still required.
 
 ## Why this exists
 
@@ -121,7 +142,7 @@ Optional integrations are bounded direct Jira/Confluence reads and supplied docu
 packs/rgr-software-v2/
 ├── pack.json
 ├── capabilities.json
-├── rigor-route-import.json
+├── evidence-import.json
 └── stages/
     ├── prepare.json
     ├── brainstorm.json
@@ -198,11 +219,11 @@ The protocol deliberately separates:
 
 See [`SECURITY.md`](SECURITY.md) for the explicit threat and trust model.
 
-## Rigor Route boundary
+## Evidence import boundary
 
-This is a compatibility contract for a future hosted control plane, not evidence of a deployed or certified integration. Local checkpoints, roles and verdicts import as historical evidence—not platform authority. Rigor Route independently applies authentication, policy, leases, credentials, approvals and publication decisions. Platform policy may only narrow or strengthen the imported workflow.
+Exported checkpoints, roles and verdicts are historical evidence. A receiving platform independently applies authentication, policy, credentials, approvals and publication decisions. Importing a bundle grants no execution or publication authority.
 
-See [`docs/agent/rigor-route-compatibility.md`](docs/agent/rigor-route-compatibility.md).
+See [`docs/agent/evidence-portability.md`](docs/agent/evidence-portability.md).
 
 ## What this repository intentionally does not do
 

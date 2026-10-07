@@ -7,7 +7,7 @@ This folder contains portable schemas, governance subcontracts, evaluation fixtu
 - `../../packs/rgr-software-v2/pack.json`
 - nine versioned stage contracts
 - capability declaration
-- Rigor Route import contract
+- Portable evidence import contract
 
 Validate the pack:
 
@@ -69,9 +69,9 @@ The export is deterministic for identical evidence, includes a hash manifest, ex
 
 These remain independently versioned subcontracts referenced by the v2 pack.
 
-## Rigor Route compatibility
+## Evidence portability
 
-See `rigor-route-compatibility.md`. Local events and artifacts can be imported, but local checkpoints and verdicts never transfer authenticated platform authority.
+See `evidence-portability.md`. Local events and artifacts can be imported, but local checkpoints and verdicts never transfer authenticated platform authority.
 
 ## Safety
 
