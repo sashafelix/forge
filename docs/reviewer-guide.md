@@ -49,5 +49,5 @@ Can a reviewer trace each requested behaviour through tests, changed files and i
 For a pilot, use the [guided setup](getting-started/governed-pilot.md), record the
 exact [Forge/Console evaluation pair](evaluation.md), and retain the generated run
 report with actual tests, timings and human corrections. Assess that evidence before
-authorising use on a real project. A live-model reference run and owner licence/release
-decisions are still required; the guide and fixture checks do not establish those.
+authorising use on a real project. A live-model reference run is still required;
+the guide and fixture checks do not establish model-backed onboarding quality.

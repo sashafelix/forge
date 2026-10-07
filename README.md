@@ -47,7 +47,7 @@ and Copilot subscription are different forms of access; they are not interchange
 
 This is currently a source evaluation, not a published stable release. See
 [qualification and release status](docs/evaluation.md#current-qualification-and-release-status)
-for the live-run evidence and owner licence/release decisions still required.
+for the live-run evidence and release preparation still required.
 
 ## Why this exists
 
@@ -250,9 +250,9 @@ If you are evaluating the design rather than running it, start with:
 6. [`docs/agent/role-contracts.json`](docs/agent/role-contracts.json) — role and delegation authority.
 7. [`.github/workflows/validate-local-rgr.yml`](.github/workflows/validate-local-rgr.yml) — end-to-end contract validation.
 
-## Project status and reuse
+## Project status
 
-`VERSION` is `2.3.0`; current untagged changes are recorded under `Unreleased`. Record `git rev-parse HEAD` when reviewing or running Forge; the source version marker alone does not identify a published release. The repository does not yet include a `LICENSE` file; intended reuse terms await owner selection. See [contribution and maintenance guidance](CONTRIBUTING.md).
+`VERSION` is `2.3.0`; current untagged changes are recorded under `Unreleased`. Record `git rev-parse HEAD` when reviewing or running Forge; the source version marker alone does not identify a published release. See [contribution and maintenance guidance](CONTRIBUTING.md).
 
 ## Reference
 

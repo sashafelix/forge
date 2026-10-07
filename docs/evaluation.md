@@ -53,12 +53,10 @@ has been qualified. The pilot and report commands make that evidence reproducibl
 their existence is not a substitute for executing the trial.
 
 Source markers remain Forge `2.3.0` and Console `0.9.0`; the current work is unreleased.
-No licence is selected in either repository. The repository owner must choose the
-licence before reuse/distribution terms can be stated. Do not add an assumed licence
-or describe a source snapshot as a stable release.
+Do not describe a source snapshot as a stable release.
 
 For an evaluation release, record the exact source pair, passing CI links, platform
-tested, live pilot record, known limitations and licence decision in release notes.
+tested, live pilot record and known limitations in release notes.
 Console packaging already produces `SOURCE_REVISION` and `SHA256SUMS`. Verify those
 against the pinned pair; record whether each package is signed. Unsigned development
 packages and signed distribution builds must be described accurately. The owner

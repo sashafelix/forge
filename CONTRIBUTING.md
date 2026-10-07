@@ -29,6 +29,6 @@ accurate. Use fictional identifiers and reserved example domains; do not commit
 credentials, private project data or generated real-run evidence.
 
 Record current changes under `Unreleased` in [CHANGELOG.md](CHANGELOG.md).
-`VERSION` is a source version marker, not proof of a tagged release. License
-selection and releases are repository-owner decisions; contributors should not
-invent a license or claim an unreleased revision is a published release.
+`VERSION` is a source version marker, not proof of a tagged release. Releases
+require repository-owner approval; contributors should not claim an unreleased
+revision is a published release.
