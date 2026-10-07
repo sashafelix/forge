@@ -6,7 +6,7 @@ pack:
   pack_version: 2.3.0
   stage_contract_schema: docs/agent/schemas/stage-contract.schema.json
   capabilities: packs/rgr-software-v2/capabilities.json
-  rigor_route_import: packs/rgr-software-v2/rigor-route-import.json
+  evidence_import: packs/rgr-software-v2/evidence-import.json
   local_signature_optional: true
   trusted_platform_may_require_signature: true
 pre_run:
@@ -143,7 +143,7 @@ export:
   hash_algorithm: sha256
   publication_authority: none
 compatibility:
-  rigor_route_import_contract: rigor-route-pack-import-v1
+  evidence_import_contract: forge-evidence-import-v1
   local_verdicts_are_evidence_not_platform_authority: true
   platform_policy_may_only_narrow: true
 failure_policy:

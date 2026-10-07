@@ -4,6 +4,10 @@
 
 Use it for a bounded pilot. Claude Code remains another adapter with its own enforcement boundary. A Console probe or imported bundle never grants execution authority.
 
+For a first run, follow the [guided pilot](getting-started/governed-pilot.md). It
+generates all four draft inputs, a disposable target and a qualification worksheet.
+This page is the detailed reference for adapting that setup to another repository.
+
 ## Prerequisites and independent inputs
 
 Install Python 3.11+, Git and a reachable Linux Docker engine. On Windows, use the CLI inside WSL; Console's native bridge currently requires a directly selectable Linux/macOS host. Preinstall an immutable container image containing the target's test dependencies. The host never pulls images, installs dependencies or falls back to a host shell.

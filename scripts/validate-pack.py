@@ -174,8 +174,8 @@ def validate(pack_path: Path) -> tuple[list[str], dict[str, str]]:
         if not (ROOT / rel_path).is_file():
             errors.append(f"pack manifest: missing referenced governance file {rel_path}")
 
-    import_path = ROOT / manifest["compatibility"]["rigor_route_import_contract"]
-    import_doc, import_errors = validate_doc(import_path, "rigor-route-import.schema.json")
+    import_path = ROOT / manifest["compatibility"]["evidence_import_contract"]
+    import_doc, import_errors = validate_doc(import_path, "evidence-import.schema.json")
     errors.extend(import_errors)
     if import_doc.get("pack_id") != pack_id or import_doc.get("pack_version") != pack_version:
         errors.append(f"{import_path}: pack identity/version mismatch")

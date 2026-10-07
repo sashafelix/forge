@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "import_contract": "rigor-route-pack-import-v1",
+  "import_contract": "forge-evidence-import-v1",
   "pack_id": "rgr-software",
   "pack_version": "2.3.0",
   "accepted_bundle_format": "local-rgr-evidence-bundle/1.0",
@@ -25,47 +25,47 @@
   "translation_rules": [
     {
       "local": "events.jsonl",
-      "rigor_route": "canonical run event ledger",
+      "destination": "canonical run event ledger",
       "rule": "Preserve sequence, attempt, stage, actor role, correlation, causation and artifact references."
     },
     {
       "local": "canonical JSON artifacts",
-      "rigor_route": "immutable artifact store",
+      "destination": "immutable artifact store",
       "rule": "Store bytes unchanged, verify SHA-256 and retain source path as provenance metadata."
     },
     {
       "local": "profile-resolution.json",
-      "rigor_route": "workflow profile selection evidence",
+      "destination": "workflow profile selection evidence",
       "rule": "Import selected profile and reasons; platform policy may only require a stricter profile."
     },
     {
       "local": "role-contracts.json actor roles",
-      "rigor_route": "model/tool invocation role",
+      "destination": "model/tool invocation role",
       "rule": "Map exact role IDs and intersect permissions with platform/workspace/repository policy."
     },
     {
       "local": "operator checkpoints",
-      "rigor_route": "authenticated approval decisions",
+      "destination": "authenticated approval decisions",
       "rule": "Local checkpoint evidence is historical only and never grants new platform authority."
     },
     {
       "local": "quality-gates.json and convergence-report.json",
-      "rigor_route": "review and convergence projections",
-      "rule": "Import verdicts as evidence; Rigor Route independently validates before publication."
+      "destination": "review and convergence projections",
+      "rule": "Import verdicts as evidence; the receiving platform independently validates before publication."
     },
     {
       "local": "runtime.selected/runtime.fallback/runtime.completed events",
-      "rigor_route": "model runtime provenance and usage evidence",
+      "destination": "model runtime provenance and usage evidence",
       "rule": "Preserve selected target, adapter/model reference, locality, fallback reason and safe usage metrics; never treat local model choice as platform authority."
     },
     {
       "local": "lane-resolution.json",
-      "rigor_route": "implementation lane/wave evidence",
+      "destination": "implementation lane/wave evidence",
       "rule": "Preserve deterministic lane membership, dependencies, write surfaces, overlap checks and resolved execution mode; platform policy may reduce concurrency."
     },
     {
       "local": "optional intake.json and project-profile.json",
-      "rigor_route": "trusted input provenance",
+      "destination": "trusted input provenance",
       "rule": "Import as evidence only when present; preserve project-profile provenance and never translate project facts into platform governance authority."
     }
   ],

@@ -1,6 +1,6 @@
-# Rigor Route Compatibility — Local RGR v2
+# Portable Forge evidence
 
-Local RGR v2 is a repository-local reference protocol. Rigor Route is the future trusted control plane. Compatibility is evidence-based rather than authority-preserving.
+Forge exports evidence for independent inspection or import into another system. Importers preserve provenance and apply their own authority checks. No hosted integration is required.
 
 ## Portable inputs
 
@@ -28,7 +28,7 @@ python3 scripts/verify-export-bundle.py evidence.tar.gz
 
 ## Import semantics
 
-The exact translation rules live in `packs/rgr-software-v2/rigor-route-import.json`.
+The exact translation rules live in `packs/rgr-software-v2/evidence-import.json`.
 
 - Event sequence, role, attempt and artifact references are preserved.
 - Artifact bytes are imported unchanged after SHA-256 verification.
@@ -41,8 +41,8 @@ The exact translation rules live in `packs/rgr-software-v2/rigor-route-import.js
 
 ## Authority boundary
 
-The local pack has no merge, deployment or publication authority. It does not carry credentials or authenticated approval identity into Rigor Route. The platform creates fresh leases, credentials, approvals and publication decisions.
+The local pack has no merge, deployment or publication authority. It does not carry credentials or authenticated approval identity to a receiving platform. The platform creates fresh leases, credentials, approvals and publication decisions.
 
 ## Signing
 
-Local packs may remain unsigned for development. The manifest and stage hashes are deterministically computable with `validate-pack.py`. A trusted Rigor Route environment may require a signed, reviewed and activated pack version before execution.
+Local packs may remain unsigned for development. The manifest and stage hashes are deterministically computable with `validate-pack.py`. A receiving platform may require a signed, reviewed and activated pack version before execution.

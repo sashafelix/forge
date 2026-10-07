@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added a create-only governed pilot helper: disposable target, passing baseline, all four draft operator files, exact binding hashes and a capability review worksheet. Registrations remain unavailable until independently qualified.
+- Added exact source-pair snapshots and run reports with observed test receipts, evidence hashes, timing and clearly labelled operator notes, including failed/cancelled attempts.
+- Added a platform/runtime decision table and complete pilot/evaluation handover guides. Corrected stale adapter-copy and configuration-only wording.
+- Generalised evidence import to `evidence-import.json`, `evidence_import_contract` and `forge-evidence-import-v1`; translation destinations use `destination`. Updated schemas, validators and export checks together. Consumers of pack metadata must adopt these names; run evidence format remains unchanged.
+- Removed the unused deprecated YAML corpus pointer and superseded historical design review, whose recommendations now live in canonical instructions and contracts.
+
 - Centralized all core/specialist agent instructions in `agents/` and reusable skills in `skills/<name>/SKILL.md`, indexed by `AGENTS.md`. Removed committed Claude prompt mirrors; the launcher now injects canonical definitions at runtime.
 - Added canonical library/reference validation and bounded, recorded skill/convention reads in the governed host.
 
@@ -11,7 +17,7 @@
 - Added exact-revision source maps, patch handoff, fresh positive/negative-control grading and paired repeated-run evaluation with failures and uncertainty intervals.
 - Added host/protocol/security/recovery conformance tests, real Docker CI qualification and a complete host/operator walkthrough.
 
-- Added model-neutral canonical role prompts, checked Claude Code adapter copies and an operator-routing example without a required model/provider.
+- Added model-neutral role prompts, a Claude Code adapter and an operator-routing example without a required model/provider.
 - Added reviewer, quickstart, first-change, evidence, enforcement and recovery guides; documented current runtime and multi-attempt validation limits.
 - Corrected the five-round capability declaration, PLAN lane-resolution diagram and Forge Console link.
 
@@ -28,7 +34,7 @@
 - Added optional CLI helpers for five-question project knowledge onboarding, structural plan review and spec/code/docs reconciliation against an explicit Git base.
 - Added create-only reports, bounded path-safe inspection, evidence fingerprints and regression tests for drift and malformed input.
 - Strengthened intake, ANALYZE and VERIFY guidance without changing the nine-stage protocol, profile schema or intake budget.
-- Defined the desktop companion as a configuration-only handoff; execution and approval remain owned by the pipeline.
+- Defined the configuration handoff; execution and approval remain owned by the governed host.
 
 ## 2.3.0
 
@@ -62,7 +68,7 @@
 - Added explicit local runtime capability declarations and unsupported-feature boundaries.
 - Added a source-free deterministic evidence-bundle export format with SHA-256 manifest/root hashes.
 - Added safe archive verification with exact file-set, hash, size, path and compatibility checks.
-- Added the `rigor-route-pack-import-v1` translation contract.
+- Added the `forge-evidence-import-v1` translation contract.
 - Added full synthetic-run generation and end-to-end CI covering validation, deterministic export and tamper rejection.
 
 ## 1.3.0

@@ -1,6 +1,9 @@
 # Quickstart
 
-Choose a model-free review or a supervised coding run. Forge Console is optional for both.
+Start with a model-free review, then use the [guided governed pilot](governed-pilot.md)
+to generate a disposable target and the four operator files for your first HTTP-model
+run. Forge Console is optional. Use the [execution-path table](../../README.md#choose-your-execution-path)
+to check platform and runtime requirements before installing anything.
 
 ## Prerequisites
 
@@ -26,7 +29,7 @@ Expected: four `PASS` messages after the version/revision checks. The corpus con
 
 Follow the [synthetic evidence example](evidence-example.md). It generates a nine-stage fixture, validates it, exports it twice, compares the bytes, checks archive integrity and confirms that tampered evidence is rejected. All generated files go into a fresh temporary directory.
 
-## Try a supervised coding change
+## Try a supervised coding change with Claude Code
 
 Follow the [first change walkthrough](first-change.md). It creates a separate Git repository with a passing baseline test, operator input and risk facts. You then explicitly launch the orchestrator in a compatible execution host. The repository is disposable; it is not Forge's source checkout.
 
@@ -36,6 +39,9 @@ For a different provider or host, read [model portability](../model-portability.
 
 ## Optional configuration companion
 
-[Forge Console](https://github.com/sashafelix/forge-console) can prepare project facts and provider/model profiles. Reviewed exports must be explicitly validated by Forge. Its configuration screen does not execute the nine-stage pipeline or install an HTTP adapter. See [runtime configuration](../agent/runtime-configuration.md).
+[Forge Console](https://github.com/sashafelix/forge-console) can prepare project facts
+and provider/model profiles, create disposable pilot inputs through a registered
+host, and control governed runs from its cockpit. Reviewed exports and capability
+registrations are checked by Forge. See [runtime configuration](../agent/runtime-configuration.md).
 
 If any command fails, use [operations and troubleshooting](../operations.md); do not edit evidence until a validator turns green.

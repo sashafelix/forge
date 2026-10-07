@@ -76,7 +76,7 @@
     "docs/agent/schemas/lane-resolution.schema.json"
   ],
   "compatibility": {
-    "rigor_route_import_contract": "packs/rgr-software-v2/rigor-route-import.json",
+    "evidence_import_contract": "packs/rgr-software-v2/evidence-import.json",
     "minimum_runtime": "python>=3.11,git>=2.30",
     "local_execution": true,
     "publication_authority": "none"

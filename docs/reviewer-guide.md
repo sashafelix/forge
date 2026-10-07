@@ -2,7 +2,7 @@
 
 Forge turns a software-change request into a bounded sequence of clarification, planning, test-driven implementation and independent review. Its output is a reviewable worktree or disposable source snapshot, a patch and structured evidence. A human or trusted platform decides whether that work should be published.
 
-Forge is the product. **Local RGR** is the delivery protocol; **RGR** refers to the red, green, refactor test cycle inside it. **Forge Console** is an optional configuration companion, governed-host cockpit and separate workbench for other agents. **Rigor Route** is a future control-plane compatibility contract, not an installed service.
+Forge is the product. **Local RGR** is the delivery protocol; **RGR** refers to the red, green, refactor test cycle inside it. **Forge Console** is an optional configuration companion, governed-host cockpit and separate workbench for other agents.
 
 ## Follow one request
 
@@ -24,11 +24,11 @@ Example: “Make the greeting function greet a supplied name and reject an empty
 
 ## What is available
 
-- Portable prompts in [`agents/`](../agents/README.md), with compatible Claude Code adapter copies.
+- Portable prompts in [`agents/`](../agents/README.md), loaded directly by the governed host and at runtime by the Claude Code launcher.
 - Python utilities for contracts, routing/profile/lane selection, structural review, evidence export and integrity checks.
 - Three risk profiles. `small` is bounded low-risk work; `standard` adds broader evidence; `high-risk` adds required specialists and explicit checkpoints. None skips a stage.
 - Model/provider choices supplied by the operator or execution host. A route declaration does not install or authenticate a runtime.
-- A reproducible [synthetic evidence example](getting-started/evidence-example.md) and a [supervised first-change recipe](getting-started/first-change.md).
+- A reproducible [synthetic evidence example](getting-started/evidence-example.md), a [guided governed pilot](getting-started/governed-pilot.md) that generates draft operator inputs, and a [Claude Code first-change recipe](getting-started/first-change.md).
 
 The Claude Code integration is prompt-based and needs permissions supplied by that host. The separate [governed host](governed-host.md) implements four HTTP protocols, scoped model tools, Docker commands, private SQLite state, bound approvals, locally authenticated receipts and explicit recovery. It has controlled protocol/host fixtures and real Docker CI checks; these do not prove live model quality. See the [enforcement map](enforcement.md) for practical limits.
 
@@ -46,4 +46,8 @@ The model-free example demonstrates contract validation, not coding quality or a
 
 Can a reviewer trace each requested behaviour through tests, changed files and independent evidence? Can the host prevent a stage from exceeding its write/tool permissions? Can it establish a distinct verifier and genuine operator approvals? What happens on contradictory sources, missing evidence or an interrupted process? Which model/runtime combinations have been independently tested?
 
-For a pilot, start with the disposable first-change repository. Record the Forge commit, runtime version, model reference, outcome and human corrections. Assess that evidence before authorising use on a real project.
+For a pilot, use the [guided setup](getting-started/governed-pilot.md), record the
+exact [Forge/Console evaluation pair](evaluation.md), and retain the generated run
+report with actual tests, timings and human corrections. Assess that evidence before
+authorising use on a real project. A live-model reference run and owner licence/release
+decisions are still required; the guide and fixture checks do not establish those.

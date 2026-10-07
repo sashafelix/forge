@@ -124,7 +124,7 @@ def main() -> int:
         run_validator("validate-run-governance.py", str(run_dir))
 
         pack = load_json(pack_path)
-        import_contract = load_json(ROOT / pack["compatibility"]["rigor_route_import_contract"])
+        import_contract = load_json(ROOT / pack["compatibility"]["evidence_import_contract"])
         required = set(import_contract["required_artifacts"]) - {"export-manifest.json"}
         run_files = safe_files(run_dir)
         rel_names = {path.relative_to(run_dir).as_posix() for path in run_files}

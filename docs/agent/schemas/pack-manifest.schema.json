@@ -110,13 +110,13 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "rigor_route_import_contract",
+        "evidence_import_contract",
         "minimum_runtime",
         "local_execution",
         "publication_authority"
       ],
       "properties": {
-        "rigor_route_import_contract": {
+        "evidence_import_contract": {
           "type": "string",
           "minLength": 1
         },

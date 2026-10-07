@@ -35,12 +35,20 @@ def main():
     for name in ('configuration', 'policy', 'inventory'):
         diagnostic.add_argument('--' + name, type=Path)
     diagnostic.add_argument('--facts', type=Path)
+    pilot = sub.add_parser('pilot', help='Create a disposable target and draft operator inputs; no model calls')
+    pilot.add_argument('--configuration', type=Path, required=True)
+    pilot.add_argument('--image', required=True, help='Reviewed, installed immutable test image ID')
+    pilot.add_argument('--output', type=Path, required=True, help='New directory outside Forge; never overwritten')
+    snapshot = sub.add_parser('snapshot', help='Record exact clean Forge and Console commits for evaluation')
+    snapshot.add_argument('--console', type=Path, required=True)
     prepare = sub.add_parser('prepare')
     for name in ('repo', 'run-dir', 'task-file', 'facts', 'configuration', 'policy', 'inventory'):
         prepare.add_argument('--' + name, type=Path, required=True)
-    for name in ('status', 'events', 'approve', 'advance', 'resume', 'retry', 'cancel', 'verify', 'grade'):
+    for name in ('status', 'events', 'approve', 'advance', 'resume', 'retry', 'cancel', 'verify', 'grade', 'report'):
         command = sub.add_parser(name)
         command.add_argument('run_dir', type=Path)
+        if name == 'report':
+            command.add_argument('--notes', type=Path, required=True)
         if name == 'approve':
             command.add_argument('--approval-id', required=True)
             command.add_argument('--binding', required=True)
@@ -58,7 +66,13 @@ def main():
     args = parser.parse_args()
     engine = None
     try:
-        if args.command == 'doctor':
+        if args.command == 'snapshot':
+            from forge_host.pilot import evaluation_snapshot
+            result = evaluation_snapshot(args.console)
+        elif args.command == 'pilot':
+            from forge_host.pilot import create_pilot
+            result = create_pilot(args.output, args.configuration, args.image)
+        elif args.command == 'doctor':
             paths = (args.configuration, args.policy, args.inventory)
             if any(paths) and not all(paths):
                 raise ValueError('Supply configuration, policy and inventory together')
@@ -118,6 +132,9 @@ def main():
                 result = engine.cancel()
             elif args.command == 'verify':
                 result = engine.verify_receipts()
+            elif args.command == 'report':
+                from forge_host.pilot import record_run
+                result = record_run(engine, args.notes)
             else:
                 from forge_host.evaluation import grade
                 result = grade(engine)

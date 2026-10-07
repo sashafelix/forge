@@ -68,7 +68,7 @@ These controls reduce accidental disclosure but are not a substitute for an orga
 
 A successful local verdict is evidence for a human or trusted platform decision. It is not permission to merge, deploy or publish.
 
-Rigor Route or another control plane may import Local RGR evidence, but must independently apply identity, credentials, policy, approvals, leases and publication authority. Imported local evidence may not weaken platform policy.
+A receiving platform may import Local RGR evidence, but must independently apply identity, credentials, policy, approvals, leases and publication authority. Imported local evidence may not weaken platform policy.
 
 ## Reporting security issues
 
