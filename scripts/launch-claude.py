@@ -26,6 +26,8 @@ def main():
     executable = shutil.which(args.claude)
     if not executable:
         raise ValueError('Install/authenticate Claude Code or supply --claude /path/to/executable')
+    if sys.platform == 'win32' and executable.lower().endswith(('.cmd', '.bat')):
+        raise ValueError('Select the native Claude .exe; Windows batch launchers cannot safely transport agent JSON')
     # argv is passed directly: no shell quoting or committed adapter files.
     return subprocess.call([executable, '--agents', definitions, '--agent', 'ai-pipeline-rgr-orchestrator', *forwarded], cwd=ROOT)
 

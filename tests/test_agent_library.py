@@ -108,6 +108,17 @@ class AgentLibraryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'budget exhausted'):
                 broker.execute({'kind': 'guidance', 'path': 'skills/skill-security/SKILL.md'})
 
+    def test_windows_batch_launcher_cannot_interpret_agent_json_as_shell_commands(self):
+        spec = importlib.util.spec_from_file_location('launcher', ROOT / 'scripts/launch-claude.py')
+        launcher = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(launcher)
+        with patch.object(sys, 'argv', ['launch-claude.py']), patch.object(sys, 'platform', 'win32'), \
+             patch.object(launcher.shutil, 'which', return_value='C:\\Tools\\claude.cmd'), \
+             patch.object(launcher.subprocess, 'call') as execute:
+            with self.assertRaisesRegex(ValueError, 'native Claude'):
+                launcher.main()
+        execute.assert_not_called()
+
     def test_completed_host_run_records_canonical_agent_guidance(self):
         ControlledSandbox.executions = []
         engine, _ = create_engine(self.root)

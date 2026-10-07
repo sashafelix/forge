@@ -48,4 +48,6 @@ Acceptance should demonstrate a real small-profile run plus negative tests for f
 
 ## Claude Code as one adapter
 
+Use the native Claude executable on Windows. The launcher rejects `.cmd`/`.bat` wrappers so session JSON cannot become shell input. The governed host's Windows path remains the WSL CLI documented in its guide.
+
 Launch from the Forge checkout using `python3 scripts/launch-claude.py --`, with explicit access to the target and operator inputs. The launcher reads `agents/`, passes small discovery entries using `--agents` that load the canonical prompt on invocation, and selects the orchestrator as the main session. Agents read applicable skills from `skills/`; no prompt copies are committed. The [first-change guide](getting-started/first-change.md) has the complete recipe. Official references: [CLI](https://code.claude.com/docs/en/cli-reference) and [subagents](https://code.claude.com/docs/en/sub-agents), checked on 2026-10-07. The CLI launch syntax was checked against those docs; no authenticated model run is bundled or claimed.
