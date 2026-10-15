@@ -23,6 +23,14 @@ The pipeline is **stack-agnostic**. Skills fall into two groups:
 
 Direct context lookup uses exact repository Markdown/docs, supplied files, or explicitly scoped Jira/Confluence reads. No semantic/vector index or embedding store is part of the pipeline.
 
+## Focused engineering helpers
+- [skill-delivery-planning](skill-delivery-planning/SKILL.md) — observable slices, scenario mappings and explicit test boundaries during planning
+- [skill-diagnosing-bugs](skill-diagnosing-bugs/SKILL.md) — reproducible evidence and falsifiable hypotheses for reported defects
+- [skill-environment-retro](skill-environment-retro/SKILL.md) — evidence-backed environment/check proposals after selected runs
+- [skill-architecture-survey](skill-architecture-survey/SKILL.md) — read-only simplification candidates for a scoped architectural pain point
+
+These are conditional disciplines, not extra mandatory stages or automatically launched agents. See [operator practices](../docs/agent/engineering-practices.md) and [portable handoffs](../docs/agent/portable-handoffs.md).
+
 ## Stack-specific skills (invoke only when the stack matches)
 - [skill-database](skill-database/SKILL.md) — SQL migrations + safety matrix *(stacks with a relational persistence layer; Flyway examples, generalizes to Liquibase/Drizzle/Prisma/Alembic)*
 - [skill-entity-mapping](skill-entity-mapping/SKILL.md) — entity / repository / DTO / mapper boundaries *(ORM-backed backends)*
