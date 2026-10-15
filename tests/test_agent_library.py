@@ -27,12 +27,15 @@ class AgentLibraryTests(unittest.TestCase):
         return self.root
 
     def test_catalog_covers_every_role_and_keeps_skill_bodies_lazy(self):
-        self.assertEqual(validate(), {'agents': 16, 'skills': 18})
+        self.assertEqual(validate(), {'agents': 16, 'skills': 22})
         roles = json.loads((ROOT / 'docs/agent/role-contracts.json').read_text())['roles']
         for role in roles:
             self.assertEqual(agent_for_role(role['id'])['role'], role['id'])
         self.assertTrue(all('body' not in entry for entries in catalog().values() for entry in entries))
         self.assertTrue(all(entry['path'].endswith('/SKILL.md') for entry in catalog()['skills']))
+        self.assertTrue({'skill-delivery-planning', 'skill-diagnosing-bugs',
+                         'skill-environment-retro', 'skill-architecture-survey'}
+                        <= {entry['name'] for entry in catalog()['skills']})
 
     def test_validator_rejects_stale_copies_and_broken_references(self):
         root = self.copy_library()

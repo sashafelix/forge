@@ -9,6 +9,8 @@ Start here. Forge's model-neutral instructions have one canonical source:
 | [packs/rgr-software-v2/pack.json](packs/rgr-software-v2/pack.json) | Resolving stage contracts, schemas and capabilities |
 | [docs/agent/role-contracts.json](docs/agent/role-contracts.json) | Checking the caller's authority and required outputs |
 | [docs/conventions/](docs/conventions/) | Applying conventions relevant to the target stack |
+| [docs/agent/portable-handoffs.md](docs/agent/portable-handoffs.md) | Inspecting a manually supplied requirement handoff, planning its slices or projecting review axes |
+| [docs/agent/engineering-practices.md](docs/agent/engineering-practices.md) | Selecting focused debugging, retrospective or architecture-review practices |
 
 ## Entry and context
 
@@ -50,6 +52,8 @@ Specialist and core permissions are defined in `docs/agent/role-contracts.json`.
 - Preserve frozen RED tests, actual command exits/logs, independent VERIFY and bounded remediation history. Canonical JSON contracts take precedence over Markdown projections.
 - Learnings are advisory and must be revalidated. Read source/docs directly; no semantic/vector index or background knowledge database is part of Forge.
 - Checkpoints and local verdicts do not grant transferable platform authority. Commit, merge and deployment remain explicit human decisions.
+
+For imported requirements or meaningful decomposition, load `skill-delivery-planning` during BRAINSTORM/PLAN. Preserve selected glossary meanings and scenario identities; surface conflicts as decisions. For a reported defect, use `skill-diagnosing-bugs` within the assigned role. Use `skill-environment-retro` and `skill-architecture-survey` only for the relevant authorised advisory task. Helpers and review projections never replace canonical gates or grant host permissions.
 
 ## Maintaining this library
 
